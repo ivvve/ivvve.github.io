@@ -185,14 +185,14 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>아래 예제는 <a href="https://github.com/ivvve/spring-boot-event/tree/step3" target="_blank" rel="external nofollow noopener noreferrer">github</a>에 소스를 올려놓았습니다.</p>
+            <p>아래 예제는 <a href="https://github.com/ivvve/spring-boot-event/tree/step3" rel="external nofollow noopener noreferrer" target="_blank">github</a>에 소스를 올려놓았습니다.</p>
 <hr>
-<h3 id="1-순서-적용"><a href="#1-순서-적용" class="headerlink" title="1. 순서 적용"></a>1. 순서 적용</h3><p>순차적으로 진행되는 메서드의 경우 그 순서를 알 수 있지만 이벤트 리스너의 경우 정해진 순서를 알 수가 없다.<br>(기본적으로 어떤 순서로 이벤트 리스너가 등록되는지는 더 찾아봐야할 것 같다.)<br>하지만 <code>@Order</code> 어노테이션을 통해 순서를 명시적으로 지정해 줄 수 있다.<br>아래는 EventListener 어노테이션의 <a href="https://docs.spring.io/autorepo/docs/spring/4.2.3.RELEASE/javadoc-api/org/springframework/context/event/EventListener.html" target="_blank" rel="external nofollow noopener noreferrer">Java doc</a>에서 발췌한 것이다.</p>
+<h3 id="1-순서-적용"><a href="#1-순서-적용" class="headerlink" title="1. 순서 적용"></a>1. 순서 적용</h3><p>순차적으로 진행되는 메서드의 경우 그 순서를 알 수 있지만 이벤트 리스너의 경우 정해진 순서를 알 수가 없다.<br>(기본적으로 어떤 순서로 이벤트 리스너가 등록되는지는 더 찾아봐야할 것 같다.)<br>하지만 <code>@Order</code> 어노테이션을 통해 순서를 명시적으로 지정해 줄 수 있다.<br>아래는 EventListener 어노테이션의 <a href="https://docs.spring.io/autorepo/docs/spring/4.2.3.RELEASE/javadoc-api/org/springframework/context/event/EventListener.html" rel="external nofollow noopener noreferrer" target="_blank">Java doc</a>에서 발췌한 것이다.</p>
 <blockquote>
 <p>It is also possible to <code>define the order in which listeners for a certain event</code> are invoked. To do so, add Spring’s common <code>@Order</code> annotation alongside this annotation.</p>
 </blockquote>
 <p>사용법은 <code>@EventListener</code>가 달린 메서드에 <code>@Order</code>를 추가해주면 된다.<br>Order의 값이 낮을 수록 우선순위가 높은 것이다.</p>
-<p><a href="https://ivvve.github.io/2019/06/02/java/Spring/event-listener-2/" target="_blank" rel="noopener">이전 포스팅</a>에서 완성한 애플리케이션을 실행하면 다음과 같이 <strong>EmailSender -&gt; KakaoTalkSender</strong> 순으로 동작한다.</p>
+<p><a href="https://ivvve.github.io/2019/06/02/java/Spring/event-listener-2/">이전 포스팅</a>에서 완성한 애플리케이션을 실행하면 다음과 같이 <strong>EmailSender -&gt; KakaoTalkSender</strong> 순으로 동작한다.</p>
 <p><img src="/image/java/Spring/event/event-listener-3-01.png" alt></p>
 <p>결제 내역 알림의 순서는 서비스에 크게 중요한건 아니지만 예제를 위해서<br>이메일보다 카톡을 먼저 보내야한다고 해보자.<br>그러면 앞서 말했듯이 <code>EmailSender.sendNotification</code>과 <code>KakaoTalkSender.sendNotification</code>에 <code>@Order</code>를 추가해준다.<br>그리고 카톡을 먼저 보내야하기 때문에 이메일보다 Order 값이 낮아야한다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmailSender</span> <span class="keyword">implements</span> <span class="title">OrderNotifier</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="meta">@org</span>.springframework.core.annotation.Order(<span class="number">2</span>)</span><br><span class="line">    <span class="meta">@EventListener</span> <span class="comment">// 이벤트 리스닝 기능 활성화</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendNotification</span><span class="params">(<span class="keyword">final</span> OrderedEvent orderedEvent)</span> </span>&#123;</span><br><span class="line">        Order order = orderedEvent.getOrder();</span><br><span class="line"></span><br><span class="line">        System.out.printf(<span class="string">"send email to %s - order (%s: %d)%n"</span>,</span><br><span class="line">                order.getOrderer(), order.getProduct(), order.getPrice());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -268,7 +268,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/06/04/java/Spring/event-listener-3/" data-id="cjzyxmzmw00jf39iq722fsdy0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/06/04/java/Spring/event-listener-3/" data-id="cjzyy5x5a00k3ciiqei822fc5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

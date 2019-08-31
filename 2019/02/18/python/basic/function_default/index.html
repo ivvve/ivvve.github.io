@@ -187,7 +187,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_func</span><span class="params">(li=[])</span>:</span></span><br><span class="line">    li.append(<span class="string">'test'</span>)</span><br><span class="line">    print(<span class="string">'li:'</span>, li)</span><br><span class="line">    print(<span class="string">'#############'</span>)</span><br><span class="line"></span><br><span class="line">list_func() <span class="comment"># li: ['test']</span></span><br><span class="line">list_func() <span class="comment"># li: ['test', 'test']</span></span><br><span class="line">list_func() <span class="comment"># li: ['test', 'test', 'test']</span></span><br><span class="line">list_func() <span class="comment"># li: ['test', 'test', 'test', 'test']</span></span><br></pre></td></tr></table></figure>
 
 <p>아무 parameter도 전달하지 않았을 경우 default parameter가 빈 list이기 때문에 함수내에서 li를 print하면 당연히 ‘“test” 하나 들어간 list가 출력되겠지’라고 생각하겠지만<br>막상 실행 시켜보면 주석을 달아놓은 것과 같이 list_func()를 실행할 때 마다 ‘test’가 하나 씩 추가된다.<br>이는 함수를 정의할 때 default parameter로 지정한 object도 같이 생성되고 이를 default parameter로 계속 사용하기 때문이다.</p>
-<p>파이썬 docs에서도 해당 사실에 대해 자세히 써놓았다.<br><a href="https://docs.python.org/3.7/reference/compound_stmts.html#function-definitions" target="_blank" rel="external nofollow noopener noreferrer">https://docs.python.org/3.7/reference/compound_stmts.html#function-definitions</a></p>
+<p>파이썬 docs에서도 해당 사실에 대해 자세히 써놓았다.<br><a href="https://docs.python.org/3.7/reference/compound_stmts.html#function-definitions" rel="external nofollow noopener noreferrer" target="_blank">https://docs.python.org/3.7/reference/compound_stmts.html#function-definitions</a></p>
 <blockquote>
 <p>Default parameter values are evaluated from left to right when the function definition is executed. This means that the expression is evaluated once, when the function is defined, and that the same “pre-computed” value is used for each call. This is especially important to understand when a default parameter is a mutable object, such as a list or a dictionary.</p>
 </blockquote>
@@ -202,7 +202,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/02/18/python/basic/function_default/" data-id="cjzyxmzlc00aj39iqew2zi0ts" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/02/18/python/basic/function_default/" data-id="cjzyy5x3g009qciiq7z1yi27g" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

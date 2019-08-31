@@ -188,9 +188,9 @@
             <p>개인적으로 새로운 뭔가를 배울 때 가장 좋은건 그 뭔가를 사용해서 간단한 예제를 만들어 보는 것이라고 생각한다.<br>그리고 이제 더 깊이 있는 원리나 아키텍쳐를 익히기 위해선 역시 document와 소스코드를 보는 것이 가장 좋은 것같다.</p>
 <p>최근에 개인적으로 WebRTC에 대해 흥미가 있었고, Udemy를 통해서 간단한 1:1 채팅방 웹앱도 만들어봤다.<br>물론 그렇게 대단하진 않았지만 맘에드는 새로운 기술을 사용해 뭔가를 만든다는 건 재밌는 일이다.</p>
 <p>어찌됐든 지금 더 WebRTC에 대해 깊게 파야할 이유가 생겨 WebRTC에 대해 document나 여러가지 프레임워크 등을 공부해가며 이곳에 적어 나가려고 하며<br>그 시작으로 <code>WebRTC의 아키텍쳐</code>에 대해 정리하고자 한다.</p>
-<p>참고는 공식 사이트 <a href="https://webrtc.org/" target="_blank" rel="external nofollow noopener noreferrer">https://webrtc.org/</a></p>
+<p>참고는 공식 사이트 <a href="https://webrtc.org/" rel="external nofollow noopener noreferrer" target="_blank">https://webrtc.org/</a></p>
 <hr>
-<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><p>(<a href="https://webrtc.org/architecture/" target="_blank" rel="external nofollow noopener noreferrer">https://webrtc.org/architecture/</a>)<br>(통신 관련 전문 용어가 많아 의역과 오역이 많음)</p>
+<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><p>(<a href="https://webrtc.org/architecture/" rel="external nofollow noopener noreferrer" target="_blank">https://webrtc.org/architecture/</a>)<br>(통신 관련 전문 용어가 많아 의역과 오역이 많음)</p>
 <p>WebRTC는 어떤 플러그인을 다운받거나 설치하지도 않고도<br>웹 애플리케이션 개발자에게 웹에서 화상 채팅과 같은 실시간 멀티미디어 애플리케이션을 만들 수 있는 기능들을 제공한다.</p>
 <p>WebRTC의 목적은 여러 웹 브라우저와 플랫폼을 아우르는 강력한 RTC 플랫폼을 만드는 것을 도와주는 것이다.</p>
 <p>전체적인 아키텍쳐는 아래와 같다.</p>
@@ -216,9 +216,9 @@
 <ul>
 <li><p>iSAC:<br>  VoIP와 오디오 스트리밍을 위한 광대역/초광대역 오디오 코덱<br>  12 ~ 52 kbps의 비트율과 함께 16 kHz나 32 kHz 샘플링 주파수를 사용한다.</p>
 </li>
-<li><p>iLBC:<br>VoIP와 오디오 스트리밍을 위한 좁은 대역의 음성 부호화기(A narrowband speech codec)<br>  20ms 프레임을 위한 15.2 kbps 비트레이트를 사용한 8 KHz 샘플링 주파수와 30ms 프레임을 위한 13.33 kbps<br>  Defined by IETF RFCs <a href="https://tools.ietf.org/html/rfc3951" target="_blank" rel="external nofollow noopener noreferrer">3951</a> and <a href="https://tools.ietf.org/html/rfc3952" target="_blank" rel="external nofollow noopener noreferrer">3952</a>.</p>
+<li><p>iLBC:<br>VoIP와 오디오 스트리밍을 위한 좁은 대역의 음성 부호화기(A narrowband speech codec)<br>  20ms 프레임을 위한 15.2 kbps 비트레이트를 사용한 8 KHz 샘플링 주파수와 30ms 프레임을 위한 13.33 kbps<br>  Defined by IETF RFCs <a href="https://tools.ietf.org/html/rfc3951" rel="external nofollow noopener noreferrer" target="_blank">3951</a> and <a href="https://tools.ietf.org/html/rfc3952" rel="external nofollow noopener noreferrer" target="_blank">3952</a>.</p>
 </li>
-<li><p>Opus:<br>  일정하거나 가변하는(6 kbit/s ~ 510 kbit/s) 비트레이트 인코딩, 프레임 사이즈(2.5 ms ~ 60 ms)와 다양한 샘플링율(8 kHz ~ 48 kHz)을 지원한다.<br>  Defined by <a href="https://www.ietf.org/rfc/rfc6176.txt" target="_blank" rel="external nofollow noopener noreferrer">IETF RFC 6176</a>.</p>
+<li><p>Opus:<br>  일정하거나 가변하는(6 kbit/s ~ 510 kbit/s) 비트레이트 인코딩, 프레임 사이즈(2.5 ms ~ 60 ms)와 다양한 샘플링율(8 kHz ~ 48 kHz)을 지원한다.<br>  Defined by <a href="https://www.ietf.org/rfc/rfc6176.txt" rel="external nofollow noopener noreferrer" target="_blank">IETF RFC 6176</a>.</p>
 </li>
 </ul>
 </li>
@@ -232,7 +232,7 @@
 </ul>
 <h3 id="VideoEngine"><a href="#VideoEngine" class="headerlink" title="VideoEngine"></a>VideoEngine</h3><p>VideoEngine is a framework video media chain for video, from camera to the network, and from network to the screen.</p>
 <ul>
-<li><p>VP8<br>  <a href="https://www.webmproject.org/" target="_blank" rel="external nofollow noopener noreferrer">WebM project(open web media project)</a>의 비디오 코덱이다.<br>  낮은 지연시간을 위해 설계되어 RTC에 적합하다.</p>
+<li><p>VP8<br>  <a href="https://www.webmproject.org/" rel="external nofollow noopener noreferrer" target="_blank">WebM project(open web media project)</a>의 비디오 코덱이다.<br>  낮은 지연시간을 위해 설계되어 RTC에 적합하다.</p>
 </li>
 <li><p>Video Jitter Buffer<br>  Dynamic Jitter Buffer for video.<br>  Helps conceal the effects of jitter and packet loss on overall video quality.</p>
 </li>
@@ -246,7 +246,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/07/26/etc/webrtc/architecture/" data-id="cjzyxmzkr008d39iq8l82nvpj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/07/26/etc/webrtc/architecture/" data-id="cjzyy5x2v007cciiqc18ul1xv" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

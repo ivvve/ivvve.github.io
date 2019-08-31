@@ -207,7 +207,7 @@
 <p>위 코드에서 아래와 같은 tr 태그에 th라는 속성이 있다.<br>이는 Thymeleaf에서 제공하는 기능으로 JSP로 치면 <code>&lt;c:forEach&gt;</code>와 같다.<br>아래 코드를 통해 table에 일일이 tr+td 태그를 박아넣지 않아도 화면 테스트를 할 수 있다.</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">tr</span> <span class="attr">th:each</span>=<span class="string">"i: $&#123;#numbers.sequence(1, 10)&#125;"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">"$&#123;i&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">"글쓴이 + $&#123;i&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">"제목 + $&#123;i&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>서버를 실행시켜 <a href="http://localhost:8080/boards" target="_blank" rel="external nofollow noopener noreferrer">http://localhost:8080/boards</a> 에 접속하여 view를 확인해보자.</p>
+<p>서버를 실행시켜 <a href="http://localhost:8080/boards" rel="external nofollow noopener noreferrer" target="_blank">http://localhost:8080/boards</a> 에 접속하여 view를 확인해보자.</p>
 <p><img src="/image/java/Spring/pagination/2_02.png" alt></p>
 
         </div>
@@ -216,7 +216,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/01/09/java/Spring/pagination_2/" data-id="cjzyxmzko007y39iqlg7wdzul" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/01/09/java/Spring/pagination_2/" data-id="cjzyy5x3b009aciiqym88qe5v" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

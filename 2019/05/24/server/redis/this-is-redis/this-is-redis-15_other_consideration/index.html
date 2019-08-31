@@ -183,7 +183,7 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>앞서 살펴본 <a href="http://localhost:4000/2019/05/13/book/db/redis/13_limit/" target="_blank" rel="external nofollow noopener noreferrer">임계점</a>과 <a href="http://localhost:4000/2019/05/20/book/db/redis/14_memory_config/" target="_blank" rel="external nofollow noopener noreferrer">메모리 설정</a>외에 다른 고려사항을 알아보자.</p>
+            <p>앞서 살펴본 <a href="http://localhost:4000/2019/05/13/book/db/redis/13_limit/" rel="external nofollow noopener noreferrer" target="_blank">임계점</a>과 <a href="http://localhost:4000/2019/05/20/book/db/redis/14_memory_config/" rel="external nofollow noopener noreferrer" target="_blank">메모리 설정</a>외에 다른 고려사항을 알아보자.</p>
 <h3 id="스냅샷"><a href="#스냅샷" class="headerlink" title="스냅샷"></a>스냅샷</h3><ul>
 <li>AWS와 같은 가상환경에서 레디스를 사용한다면 <code>스냅샷 파일의 위치는 반드시 로컬 파일 시스템을 사용</code>하자.<br>레디스의 스냅샷 이벤트가 발생하면 매우 짧은 시간에 매우 많은 디스크 입출력이 발생하는데,<br>EBS 같은 외부 저장장치는 로컬 디스크에 비해 스냅샷 파일을 기록하는데 많은 시간이 소요된다.<br>만약 외부 저장장치에 저장해야한다면 로컬 디스크에 스냅샷을 생성하고 외부에 복사하는 방법을 사용하자.</li>
 </ul>
@@ -201,7 +201,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/05/24/server/redis/this-is-redis/this-is-redis-15_other_consideration/" data-id="cjzyxmznq00mm39iqabdt5sr0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/05/24/server/redis/this-is-redis/this-is-redis-15_other_consideration/" data-id="cjzyy5x6100n5ciiqxnwsgn7m" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

@@ -188,11 +188,11 @@
             <p>jstat으로 자바 애플리케이션의 메모리, GC 관련 성능을 측정할 수 있다.<br>JDK를 설치하면 기본적으로 같이 설치가 되기 때문에 추가로 설치할 것은 없다.<br><code>jstat</code> 명령어로 실행할 수 있고 <code>-help</code> 옵션으로 사용법을 확인할 수 있다.</p>
 <p>자세한 사용법과 데이터의 의미는 아래 블로그에서 참고하자.</p>
 <ul>
-<li><a href="https://5dol.tistory.com/182" target="_blank" rel="external nofollow noopener noreferrer">https://5dol.tistory.com/182</a></li>
-<li><a href="https://greatkim91.tistory.com/74" target="_blank" rel="external nofollow noopener noreferrer">https://greatkim91.tistory.com/74</a></li>
+<li><a href="https://5dol.tistory.com/182" rel="external nofollow noopener noreferrer" target="_blank">https://5dol.tistory.com/182</a></li>
+<li><a href="https://greatkim91.tistory.com/74" rel="external nofollow noopener noreferrer" target="_blank">https://greatkim91.tistory.com/74</a></li>
 </ul>
 <p>jstat은 사용하기 정말 편리하고 결과를 확인하기도 쉽다.<br>PID만 알면 다른 설정 없이 손쉽게 메모리 및 GC 성능을 측정할 수 있다.<br>하지만 JConsole이나 VisualVM과 같이 시각화 도구를 제공하진 않는다. </p>
-<p>jstat 명령어로 생성된 데이터를 시각화하는 툴은 발견하진 못했지만 사이트는 하나 발견했다.<br><a href="http://nix-on.blogspot.com/2015/01/java-jstat-how-to-visualize-garbage.html" target="_blank" rel="external nofollow noopener noreferrer">http://nix-on.blogspot.com/2015/01/java-jstat-how-to-visualize-garbage.html</a></p>
+<p>jstat 명령어로 생성된 데이터를 시각화하는 툴은 발견하진 못했지만 사이트는 하나 발견했다.<br><a href="http://nix-on.blogspot.com/2015/01/java-jstat-how-to-visualize-garbage.html" rel="external nofollow noopener noreferrer" target="_blank">http://nix-on.blogspot.com/2015/01/java-jstat-how-to-visualize-garbage.html</a></p>
 <p>본인의 경우는 <code>jstat -gc -t [PID] 10000</code> 옵션으로 나온 결과를 아래와 같이 넣었다.</p>
 <p><img src="/image/java/ETC/jstat-visualizer-01.png" alt></p>
 <p><code>Plot</code> 버튼을 누르면 데이터를 파싱해서 그래프로 아래처럼 보여준다.</p>
@@ -206,7 +206,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/05/21/java/ETC/jstat-visualizer/" data-id="cjzyxmzkb006m39iqo3ys67uz" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/05/21/java/ETC/jstat-visualizer/" data-id="cjzyy5x310082ciiq9p0xvvf7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

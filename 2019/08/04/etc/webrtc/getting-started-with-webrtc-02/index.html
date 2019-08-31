@@ -185,7 +185,7 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>This post is a summary of the book <strong><a href="https://www.amazon.com/Getting-Started-WebRTC-Rob-Manson-ebook/dp/B00FF8OJZE" target="_blank" rel="external nofollow noopener noreferrer">Rob Manson’s <code>Getting Started with WebRTC</code></a></strong></p>
+            <p>This post is a summary of the book <strong><a href="https://www.amazon.com/Getting-Started-WebRTC-Rob-Manson-ebook/dp/B00FF8OJZE" rel="external nofollow noopener noreferrer" target="_blank">Rob Manson’s <code>Getting Started with WebRTC</code></a></strong></p>
 <hr>
 <h1 id="A-More-Thechnical-Introduction-to-Web-based-Real-Time-Communication"><a href="#A-More-Thechnical-Introduction-to-Web-based-Real-Time-Communication" class="headerlink" title="A More Thechnical Introduction to Web-based Real-Time Communication"></a>A More Thechnical Introduction to Web-based Real-Time Communication</h1><p>이 장에서는 새로운 Web 기반 실시간 통신(WebRTC)의 기술적인 컨셉에 대해 설명한다.</p>
 <h2 id="통신-설정하기-setting-up"><a href="#통신-설정하기-setting-up" class="headerlink" title="통신 설정하기 (setting up)"></a>통신 설정하기 (setting up)</h2><p>WebRTC 통신의 기초는 peer-to-peer 이지만, 이 통신의 설정(settint up)을 시작하기 위해서는 약간의 조정이 필요하다.<br>이는 주로 웹 서버와/또는 시그널링 서버가 제공한다.<br>이를 통해 2개 이상의 WebRTC가 가능한 디바이스나 peer들이 서로를 찾고, 상세 연결 정보를 교환하고, 어떻게 peer들이 통신할지를 정의하는 세션을 협상(negotiate)한다.<br>그리고 이제 마지막으로 peer들 사이의 직접적인 peer-to-peer 미디어 스트림이 성립(establish)된다.</p>
@@ -200,11 +200,11 @@
 <h3 id="사용자-연결"><a href="#사용자-연결" class="headerlink" title="사용자 연결"></a>사용자 연결</h3><p>이 프로세스의 가장 처음 단계는 두 사용자가 어떻게든 연결하는 것이다.<br>가장 단순한 방법으로는 두 사용자가 같은 웹사이트를 들어가는 것이다.<br>이 페이지는 각 브라우저를 식별하고 WebSocket API 등을 사용하여 공유된 시그널링 서버에 연결시킬 수 있다.<br>이런 웹페이지는 주로 두 브라우저 사이에 통신을 연결하기 위해 사용되는 unique 토큰을 할당한다.<br>첫 번째 사용자가 웹페이지로부터 받은 unique 토큰이 포함된 unique URL을 두 번째 사용자에게 보내면, 둘이 서로 같은 URL을 접속하면 첫 번째 단계는 완료된다.</p>
 <h3 id="시그널-시작"><a href="#시그널-시작" class="headerlink" title="시그널 시작"></a>시그널 시작</h3><p>이제 두 사용자가 토큰을 공유하고 있고, WebRTC 연결을 설정을 협상하는 시그널링 메시지를 교환할 수 있다.<br>이 컨텍스트 내에서, <code>시그널링 메시지</code>는 단순한 통신의 어느(any) 형식으로, 두 브라우저가 WebRTC 연결을 성립(establish)하고 제어(control)하는 것을 도와준다.<br>WebRTC는 정확하게 이를 정확히 정의해놓지 않았기 때문에 XHR polling, Server-Send Events, 웹소켓, 또는 여러 조합들을 통해 개발자가 편한 방식으로 구현할 수 있다.</p>
 <h3 id="후보자들-candidates-찾기"><a href="#후보자들-candidates-찾기" class="headerlink" title="후보자들(candidates) 찾기"></a>후보자들(candidates) 찾기</h3><p>다음 단계는 두 브라우저가 자신의 네트워크와 어떻게 접근할 수 있는지에 대한 정보를 교환하는 것이다.<br>이 과정은 주로 <code>후보자들 찾기(finding cadidates)</code>로 설명되며,<br>결국에 각 브라우저는 직접 접근할 수 있는 네트워크 인터페이스와 포트에 매핑되어야한다.</p>
-<p>각 브라우저는 아마 NAT(Network Address Translation)를 사용하는 라우터 뒤에 있을 것이다.<br>이 라우터를 통해 연결 방법을 찾는 방법은 <a href="http://en.wikipedia.org/wiki/NAT_traversal" target="_blank" rel="external nofollow noopener noreferrer">NAT Traversal</a>이라고 알려져 있고, WebRTC 통신을 성립할 때 매우 중요하다.</p>
+<p>각 브라우저는 아마 NAT(Network Address Translation)를 사용하는 라우터 뒤에 있을 것이다.<br>이 라우터를 통해 연결 방법을 찾는 방법은 <a href="http://en.wikipedia.org/wiki/NAT_traversal" rel="external nofollow noopener noreferrer" target="_blank">NAT Traversal</a>이라고 알려져 있고, WebRTC 통신을 성립할 때 매우 중요하다.</p>
 <p>NAT Traversal의 일반적인 방법은 STUN(Session Traversal Utilities for NAT) 서버를 사용하는 것이다.<br>STUN 서버는 public 인터넷으로부터 어떻게 접근하는지를 식별하고 유용한 형식(useful form)으로 이 정보를 돌려준다.</p>
-<p>만약 STUN 서버가 public 인터넷으로 부터 브라우저로 접속할 수 있는 방법을 찾지 못할 경우,<br><a href="http://en.wikipedia.org/wiki/Traversal_Using_Relay_NAT" target="_blank" rel="external nofollow noopener noreferrer">TURN(Traversal Using Relay NAT)</a> 서버와 같은 미디어 중계(realy) 솔루션을 사용하는 옵션 밖에 없다.</p>
-<p>WebRTC에서는, 이 전체 과정이 주로 하나의 <a href="http://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment" target="_blank" rel="external nofollow noopener noreferrer">ICE(Interactive Connectivity Establishment)</a> framework로 묶여있다.<br>ICE framework는 STUN 서버로 접속과 필요할 때 TURN 서버로 전환(falling back)하는 것을 다룬다.</p>
-<h3 id="미디어-세션-협상"><a href="#미디어-세션-협상" class="headerlink" title="미디어 세션 협상"></a>미디어 세션 협상</h3><p>이제 두 브라우저는 어떻게 서로에게 통신할 지를 알고 있다.<br>이들은 오디오나 비디오 같은 미디어의 타입과 형식(format)을 동의해야만 하고,<br>이들은 코덱, 해상도, 비트레이트 등을 교환할 것이다.<br>이는 주로 <a href="http://en.wikipedia.org/wiki/Session_Description_Protocol" target="_blank" rel="external nofollow noopener noreferrer">SDP(Session Description Protocol)</a> 위에서 만들어진 offer/answer 기반의 모델을 사용해서 협상된다.<br>이는 <a href="http://tools.ietf.org/html/draft-ietf-rtcweb-jsep-00" target="_blank" rel="external nofollow noopener noreferrer">JSEP(JavaScript Session Establishment Protocol)</a>으로 정의되어있다.</p>
+<p>만약 STUN 서버가 public 인터넷으로 부터 브라우저로 접속할 수 있는 방법을 찾지 못할 경우,<br><a href="http://en.wikipedia.org/wiki/Traversal_Using_Relay_NAT" rel="external nofollow noopener noreferrer" target="_blank">TURN(Traversal Using Relay NAT)</a> 서버와 같은 미디어 중계(realy) 솔루션을 사용하는 옵션 밖에 없다.</p>
+<p>WebRTC에서는, 이 전체 과정이 주로 하나의 <a href="http://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment" rel="external nofollow noopener noreferrer" target="_blank">ICE(Interactive Connectivity Establishment)</a> framework로 묶여있다.<br>ICE framework는 STUN 서버로 접속과 필요할 때 TURN 서버로 전환(falling back)하는 것을 다룬다.</p>
+<h3 id="미디어-세션-협상"><a href="#미디어-세션-협상" class="headerlink" title="미디어 세션 협상"></a>미디어 세션 협상</h3><p>이제 두 브라우저는 어떻게 서로에게 통신할 지를 알고 있다.<br>이들은 오디오나 비디오 같은 미디어의 타입과 형식(format)을 동의해야만 하고,<br>이들은 코덱, 해상도, 비트레이트 등을 교환할 것이다.<br>이는 주로 <a href="http://en.wikipedia.org/wiki/Session_Description_Protocol" rel="external nofollow noopener noreferrer" target="_blank">SDP(Session Description Protocol)</a> 위에서 만들어진 offer/answer 기반의 모델을 사용해서 협상된다.<br>이는 <a href="http://tools.ietf.org/html/draft-ietf-rtcweb-jsep-00" rel="external nofollow noopener noreferrer" target="_blank">JSEP(JavaScript Session Establishment Protocol)</a>으로 정의되어있다.</p>
 <h3 id="RTCPeerConnection-스트림-시작"><a href="#RTCPeerConnection-스트림-시작" class="headerlink" title="RTCPeerConnection 스트림 시작"></a>RTCPeerConnection 스트림 시작</h3><p>위 과정이 완료되면, 브라우저들은 직접 peer-to-peer 연결이나 fall back 용으로 사용하는 어느 media realy gateway를 통해서 드디어 서로에게 미디어 스트리밍을 시작한다.</p>
 <p>이 단계에서, 브라우저들은 같은 WebRTC 통신을 제어하기 위한 통신 공유용 시그널링 서버 솔루션을 계속 사용할 수 있다.<br>혹은 서로 이를 직접하기 위해 특정한 타입의 WebRTC 데이터 채널을 사용할 수 있다.</p>
 <h2 id="웹소켓-사용하기"><a href="#웹소켓-사용하기" class="headerlink" title="웹소켓 사용하기"></a>웹소켓 사용하기</h2><p>WebSocket API는 웹 애플리케이션에서 양방향 통신을 쉽게 사용할 수 있게해주었다.<br>WebSocket API의 주요 장점은 메시징이 양방향에 빠르고 가볍다는 것이다.<br>XHR polling/long-polling 모델과는 달리 지연이나 지속적인 네트워크 트래픽이 없고<br>이는 WebRTC 통신을 설정하기 위해 필요한 offer/answer dance에 있어 이상적이다.</p>
@@ -247,7 +247,7 @@
 <li><p>JSEP offer/answer 처리<br>caller와 같지만, caller로 부터 offer를 받은 이후 callee의 흐름(flow)가 시작된다는 것이 중요하다.</p>
 </li>
 </ul>
-<h2 id="RTCPeerConnection은-어디에-위치할까"><a href="#RTCPeerConnection은-어디에-위치할까" class="headerlink" title="RTCPeerConnection은 어디에 위치할까?"></a>RTCPeerConnection은 어디에 위치할까?</h2><p>아래 다이어그램은 <a href="https://webrtc.org/architecture/" target="_blank" rel="external nofollow noopener noreferrer">WebRTC 아키텍쳐</a>이다.<br>이처럼 RTCPeerConnectionAPI 밑에 아래 처럼 복잡한 레이어들이 숨겨져있다.</p>
+<h2 id="RTCPeerConnection은-어디에-위치할까"><a href="#RTCPeerConnection은-어디에-위치할까" class="headerlink" title="RTCPeerConnection은 어디에 위치할까?"></a>RTCPeerConnection은 어디에 위치할까?</h2><p>아래 다이어그램은 <a href="https://webrtc.org/architecture/" rel="external nofollow noopener noreferrer" target="_blank">WebRTC 아키텍쳐</a>이다.<br>이처럼 RTCPeerConnectionAPI 밑에 아래 처럼 복잡한 레이어들이 숨겨져있다.</p>
 <p><img src="/image/etc/webrtc/getting-started-with-webrtc-02-001.png" alt></p>
 <h2 id="RTCDataChannel-API"><a href="#RTCDataChannel-API" class="headerlink" title="RTCDataChannel API"></a>RTCDataChannel API</h2><p>WebRTC를 사용하여 피어들간 미디어 스트림을 보낼 때 뿐만 아니라,<br>임의의 데이터 스트림을 보내기 위해 DataChannel API를 사용하는 것도 가능하다.<br>많은 사람들이 주로 이를 RTCDataChanenel API라 언급하지만, 정확히는 WebRTC DataChannel API이다.<br>이는 send() 메서드와 onmessage 이벤트를 통해 웹소켓과 유사하도록 설계된 매우 유연하고 강력한 솔루션이다.</p>
 
@@ -257,7 +257,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/" data-id="cjzyxmzn400k039iquk9wrxgm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/" data-id="cjzyy5x5600jmciiqlboc4hwr" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

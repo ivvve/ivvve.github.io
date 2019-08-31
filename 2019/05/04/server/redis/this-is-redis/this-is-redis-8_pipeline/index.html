@@ -209,7 +209,7 @@
 <ul>
 <li>레디스 프로토콜 형식</li>
 </ul>
-<p>위 레디스 명령어를 <a href="https://ivvve.github.io/2019/04/29/book/db/redis/7_protocol" target="_blank" rel="noopener">프로토콜 형식</a>으로 변경하여 보자</p>
+<p>위 레디스 명령어를 <a href="https://ivvve.github.io/2019/04/29/book/db/redis/7_protocol">프로토콜 형식</a>으로 변경하여 보자</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> &#123;1..1000000&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    key=<span class="string">"key<span class="variable">$&#123;i&#125;</span>"</span></span><br><span class="line">    val=<span class="string">"val<span class="variable">$&#123;i&#125;</span>"</span></span><br><span class="line">    len=<span class="variable">$&#123;#key&#125;</span> <span class="comment"># 문자열의 length를 구한다.</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"*3\r\n"</span> &gt;&gt; sample_data</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"\$3\r\n"</span> &gt;&gt; sample_data</span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"set\r\n"</span> &gt;&gt; sample_data</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"\$<span class="variable">$&#123;len&#125;</span>\r\n"</span> &gt;&gt; sample_data</span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"<span class="variable">$&#123;key&#125;</span>\r\n"</span> &gt;&gt; sample_data</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"\$<span class="variable">$&#123;len&#125;</span>\r\n"</span> &gt;&gt; sample_data</span><br><span class="line">    <span class="built_in">printf</span> <span class="string">"<span class="variable">$&#123;val&#125;</span>\r\n"</span> &gt;&gt; sample_data</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
 
 <p>앞서 레디스 명령 형식으로 보냈을 경우 레디스 프로토콜 형태로 변경하는 작업이 추가되기 때문에 처음부터 레디스 프로토콜 형식으로 보내는 것이 더 빠르다.<br>(하지만 두 경우 모두 빠르기 때문에 상황에 맞게 사용하면 된다.)</p>
@@ -227,7 +227,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/05/04/server/redis/this-is-redis/this-is-redis-8_pipeline/" data-id="cjzyxmzo100nh39iq6fy35xnt" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/05/04/server/redis/this-is-redis/this-is-redis-8_pipeline/" data-id="cjzyy5x6a00nuciiqc4y75bsi" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

@@ -203,7 +203,7 @@
 <blockquote>
 <p>MSETNX is atomic, so all given keys are set at once. It is not possible for clients to see that some of the keys were updated while others are unchanged.</p>
 </blockquote>
-<p>Redis doc : <a href="https://redis.io/commands/msetnx" target="_blank" rel="external nofollow noopener noreferrer">https://redis.io/commands/msetnx</a></p>
+<p>Redis doc : <a href="https://redis.io/commands/msetnx" rel="external nofollow noopener noreferrer" target="_blank">https://redis.io/commands/msetnx</a></p>
 <p><code>getset</code> : 이전 값을 가져오고 새로운 값을 set한다.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; getset key1 val1</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; getset key1 val2</span><br><span class="line"><span class="string">"val1"</span></span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line"><span class="string">"val2"</span></span><br></pre></td></tr></table></figure>
 
@@ -272,7 +272,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/04/28/server/redis/this-is-redis/this-is-redis-5_data_structure/" data-id="cjzyxmznx00n739iqz09gwz97" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/04/28/server/redis/this-is-redis/this-is-redis-5_data_structure/" data-id="cjzyy5x6500nhciiqafjug6og" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

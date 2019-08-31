@@ -207,7 +207,7 @@
 <p>‘aa’는 ‘a’ + ‘a’와 같지만 ‘a’를 담은 변수를 두 번 더한 것과는 다르다.<br>(내부적인 동작에 대해서는 자세히는 모르겠다….)<br>id() 메서드를 통해 확인 했을 때 변수 끼리 더했을 때 항상 새로운 객체를 생성한다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'aa_id:'</span>, id(aa))</span><br><span class="line">print(<span class="string">'aa2_id:'</span>, id(aa2))</span><br><span class="line">print(<span class="string">'a+a_id:'</span>, id(a + a)) <span class="comment"># 3개의 결과가 서로 다르게 나옴</span></span><br><span class="line">print(<span class="string">'a+a_id:'</span>, id(a + a))</span><br><span class="line">print(<span class="string">'a+a_id:'</span>, id(a + a))</span><br></pre></td></tr></table></figure>
 
-<p>sys.intern() 메서드를 사용하면 파라미터로 전달된 string 객체와 값이 같은 interning string을 가져온다.<br>그래서 sys.intern() 메서드의 return 값의 identity는 항상 같다.<br>(그리고 interning string을 쓰는 것이 성능에 약간 도움이 된다고 한다. by Python docs)<br><a href="https://docs.python.org/3.7/library/sys.html#sys.intern" target="_blank" rel="external nofollow noopener noreferrer">https://docs.python.org/3.7/library/sys.html#sys.intern</a></p>
+<p>sys.intern() 메서드를 사용하면 파라미터로 전달된 string 객체와 값이 같은 interning string을 가져온다.<br>그래서 sys.intern() 메서드의 return 값의 identity는 항상 같다.<br>(그리고 interning string을 쓰는 것이 성능에 약간 도움이 된다고 한다. by Python docs)<br><a href="https://docs.python.org/3.7/library/sys.html#sys.intern" rel="external nofollow noopener noreferrer" target="_blank">https://docs.python.org/3.7/library/sys.html#sys.intern</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> intern</span><br><span class="line"></span><br><span class="line">print(<span class="string">'intern'</span>)</span><br><span class="line">print(<span class="string">'aa_id:'</span>, id(aa))</span><br><span class="line">print(<span class="string">'aa2_id:'</span>, id(aa2))</span><br><span class="line">print(<span class="string">'a+a_id:'</span>, id(intern(a + a)))</span><br><span class="line">print(<span class="string">'a+a_id:'</span>, id(intern(a + a)))</span><br><span class="line">print(<span class="string">'a+a_id:'</span>, id(intern(a + a)))</span><br></pre></td></tr></table></figure>
         </div>
         <footer class="article-footer">
@@ -215,7 +215,7 @@
 
 
 
-    <a data-url="http://ivvve.github.io/2019/02/18/python/basic/is_and_==/" data-id="cjzyxmzld00an39iq8gn57qfm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://ivvve.github.io/2019/02/18/python/basic/is_and_==/" data-id="cjzyy5x3h009tciiq9jft03sl" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
