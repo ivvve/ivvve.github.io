@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>Redis) 이것이 레디스다 4 - NoSQL | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="db,redis,book">
+    
+    <meta name="description" content="NoSQL마틴 파울러의 NoSQL: 빅 데이터 세상으로 떠나는 간결한 안내서에는 NoSQL을 아래 조건을 만족하는 데이터 저장소라고 기술되어 있다.  대용량 웹 서비스를 위하여 만들어진 데이터 저장소 관계형 데이터 모델을 지양하며 대량의 분산된 데이터를 저장하고 조회하는데 특화된 저장소 스키마 없이 사용 가능하거나 느슨한 스키마를 제공하는 저장소  일반적으">
+<meta name="keywords" content="db,redis,book">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis) 이것이 레디스다 4 - NoSQL">
+<meta property="og:url" content="http://ivvve.github.io/2019/04/26/server/redis/this-is-redis/this-is-redis-4_no_sql/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="NoSQL마틴 파울러의 NoSQL: 빅 데이터 세상으로 떠나는 간결한 안내서에는 NoSQL을 아래 조건을 만족하는 데이터 저장소라고 기술되어 있다.  대용량 웹 서비스를 위하여 만들어진 데이터 저장소 관계형 데이터 모델을 지양하며 대량의 분산된 데이터를 저장하고 조회하는데 특화된 저장소 스키마 없이 사용 가능하거나 느슨한 스키마를 제공하는 저장소  일반적으">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/book/db/redis/04_001.png">
+<meta property="og:updated_time" content="2019-08-31T02:31:35.123Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis) 이것이 레디스다 4 - NoSQL">
+<meta name="twitter:description" content="NoSQL마틴 파울러의 NoSQL: 빅 데이터 세상으로 떠나는 간결한 안내서에는 NoSQL을 아래 조건을 만족하는 데이터 저장소라고 기술되어 있다.  대용량 웹 서비스를 위하여 만들어진 데이터 저장소 관계형 데이터 모델을 지양하며 대량의 분산된 데이터를 저장하고 조회하는데 특화된 저장소 스키마 없이 사용 가능하거나 느슨한 스키마를 제공하는 저장소  일반적으">
+<meta name="twitter:image" content="http://ivvve.github.io/image/book/db/redis/04_001.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2019/04/26/server/redis/this-is-redis/this-is-redis-4_no_sql/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/server/">server</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/server/redis/">redis</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-server/redis/this-is-redis/this-is-redis-4_no_sql" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Redis) 이것이 레디스다 4 - NoSQL
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/04/26/server/redis/this-is-redis/this-is-redis-4_no_sql/" class="article-date">
+            <time datetime="2019-04-26T02:40:00.000Z" itemprop="datePublished">2019-04-26</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/book/">book</a>, <a class="tag-link" href="/tags/db/">db</a>, <a class="tag-link" href="/tags/redis/">redis</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h4 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h4><p>마틴 파울러의 <a href="http://www.insightbook.co.kr/book/programming-insight/nosql-distilled" target="_blank" rel="external nofollow noopener noreferrer">NoSQL: 빅 데이터 세상으로 떠나는 간결한 안내서</a>에는 NoSQL을 아래 조건을 만족하는 데이터 저장소라고 기술되어 있다.</p>
+<ul>
+<li>대용량 웹 서비스를 위하여 만들어진 데이터 저장소</li>
+<li>관계형 데이터 모델을 지양하며 대량의 분산된 데이터를 저장하고 조회하는데 특화된 저장소</li>
+<li>스키마 없이 사용 가능하거나 느슨한 스키마를 제공하는 저장소</li>
+</ul>
+<p>일반적으로 NoSQL은 관계형 데이터베이스에 비하여 쓰기와 읽기 성능이 월등히 빠르다.</p>
+<p>일반적으로 관계형 데이터베이스는 저장된 데이터의 양이 많아질수록 읽기/쓰기 성능의 저하가 일어난다. 특히 인덱스 처리 방법인 B트리의 한계로 인해 쓰기 성능의 저하가 심하다.<br>또한 RDBMS는 단일 하드웨어의 성능에 따라 전체 시스템의 성능이 결정된다.</p>
+<p>NoSQL은 분산 환경에서 대량의 데이터를 빠르게 처리하기 위해서 한,두 가지 단점을 가진 채로 개발됐다.</p>
+<ul>
+<li>RDBMS에서 제공하는 쿼리와 트랜잭션 같은 편의 기능을 제공하지 않으며, 제공하는 데이터의 일관성 레벨도 NoSQL 별로 다르다. </li>
+<li>솔루션을 도입하기 위해서는 해당 NoSQL의 설계 사상, 내부 구조를 파악해야한다.</li>
+</ul>
+<p>그럼에도 NoSQL을 선택하는 이유는 하드웨어 추가에 따른 성능의 선형 증가를 얻을 수 있다는 장점 때문이다.<br>새로 도입하는 NoSQL 솔루션이라면 서비스에 필요한 기능을 제공하는지 뿐만 아니라 반드시 해당 NoSQL의 설계 사상과 내부구조를 파악하는 작업이 선행되어야 한다.</p>
+<hr>
+<h4 id="CAP-정리"><a href="#CAP-정리" class="headerlink" title="CAP 정리"></a>CAP 정리</h4><p>이론 컴퓨터 과학 분야에서 분산 컴퓨터 시스템을 설명하는데 사용되는 이론이다.<br><code>일관성(Consistency)</code>, <code>가용성(Availability)</code>, <code>분할 허용성(Partition Tolerance)</code> 모두를 동시에 지원하는 분산 컴퓨터 시스템은 없다.</p>
+<p><code>분산 컴퓨팅</code> : <code>다중 시스템 환경</code>에서 소프트웨어가 작동하는 것</p>
+<ul>
+<li><code>일관성</code></li>
+</ul>
+<p>다중 클라이언트에서 같은 시간에 조회하는 데이터는 항상 동일한 데이터임을 보증하는 것<br>RDBMS에서 지원하는 가장 기본적인 기능이지만 NoSQL에서는 빠른 분산처리를 위하여 일관성을 희생하기도 한다. </p>
+<p>시간이 지나 결과적으로 일관성이 보장되는 상황을 최종 일관성(Eventual Consistency) 또는 궁극적인 일관성이라고 한다.</p>
+<p>NoSQL의 분산 노드간의 데이터 동기화를 위해 두 가지 방법을 사용한다.</p>
+<ol>
+<li>클라이언트에 응답하기 전에 모든 노드에 데이터를 저장하는 동기식 방법<ul>
+<li>느리지만 강한 데이터의 정합성을 가짐</li>
+</ul>
+</li>
+<li>먼저 클라이언트에게 응답한 다음 노드로 데이터를 동기화하는 비동기식 방법<ul>
+<li>빠른 응답이 가능하지만 쓰기 노드에 장애 발생 시 데이터 손실이 생길 수 있다.</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><code>가용성</code> </li>
+</ul>
+<p>모든 클라이언트의 읽기와 쓰기 요청에 대하여 항상 응답이 가능해야 함을 보증하는 것<br>가용성을 가질 경우 클러스터 내에서 몇 개의 노드가 망가지더라도 정상적인 서비스가 가능하다.</p>
+<p>가용성을 위한 데이터 중복 저장 방법</p>
+<ol>
+<li>동일한 데이터를 가진 저장소를 하나 더 생성하는 마스터-슬레이브 복제 방법</li>
+<li>데이터 단위로 중복 저장하는 피어-투-피어 복제 방법</li>
+</ol>
+<p><code>단일 고장점 (Single Point Of Failure)</code> : 시스템을 구성하는 개별 요소중에서 하나의 요소가 망가졌을 때 시스템 전체를 멈추게 만드는 요소</p>
+<ul>
+<li><code>네트워크 분할 허용성</code></li>
+</ul>
+<p>지역적으로 분할된 네트워크 환경에서 동작하는 시스템에서 두 지역 간의 네트워트가 단절되거나 네트워크 데이터의 유실이 일어나더라도 각 지역 내의 시스템은 정상적으로 동작해야 함을 의미한다.</p>
+<p><img src="/image/book/db/redis/04_001.png" alt></p>
+<hr>
+<h4 id="NoSQL의-분류"><a href="#NoSQL의-분류" class="headerlink" title="NoSQL의 분류"></a>NoSQL의 분류</h4><ul>
+<li>키-값 모델<ul>
+<li>적절한 사용처 : 단일 연산에 의하여 처리를 완료하거나 취소할 수 있는 곳<ul>
+<li>사용자의 프로필 정보</li>
+<li>웹 서버 클러스터링을 위한 세션 정보</li>
+<li>장바구니 정보</li>
+<li>URL 단축 정보</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>문서 모델<ul>
+<li>하나의 키에 하나의 구조화된 문서(JSON, XML, …)를 저장하고 조회</li>
+<li>B트리 인덱스를 사용하여 2차 인덱스를 생성하는 NoSQL의 경우 읽기와 쓰기의 비율에서 읽기가 70% 이상일 때가 가장 좋은 성능을 보인다.</li>
+<li>적절한 사용처 : 자주 변하지 않는 정보를 저장하고 조회하는데 적합하다.<ul>
+<li>중앙 집중식 로그 저장</li>
+<li>타임라인 저장</li>
+<li>통계 정보 저장</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>컬럼 모델<ul>
+<li>하나의 키에 여러 컬럼 이름과 컬럼 값의 쌍으로 이뤄진 데이터를 저장하고 조회한다.</li>
+<li>읽기와 쓰기 중 쓰기에 더 특화되어있다.</li>
+<li>적절한 사용처<ul>
+<li>채팅 내용 저장</li>
+<li>메일 저장소</li>
+<li>알림 내용 저장</li>
+<li>실시간 데이터 저장소</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>그래프 모델<ul>
+<li>노드와 관계(or 버텍스 or 엣지)를 사용하여 데이터를 저장하고 조회한다.</li>
+<li>적절한 사용처 : 연관검색을 위한 정보를 저장하고 조회하는데 적합하다.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="언제-NoSQL을-사용해야-하는가"><a href="#언제-NoSQL을-사용해야-하는가" class="headerlink" title="언제 NoSQL을 사용해야 하는가"></a>언제 NoSQL을 사용해야 하는가</h4><p>대량의 단순 정보를 빠르게 저장하고 조회할 때, RDBMS가 처리하지 못하는 대량의 데이터를 입력할 때 (RDBMS 특성상 제공 가능한 성능(하드웨어)의 한계가 있다.), 스키마가 고정되지 않은 데이터를 저장하고 조회할 때 등…</p>
+<p>RDBMS -&gt; NoSQL 할 때 가장 먼저 고려해야할 사항 : <code>일관성 모델</code></p>
+<p>NoSQL을 선택할 때 고려할 사항</p>
+<ul>
+<li>일관성 모델 : 어느 정도 일관성이 필요한지</li>
+<li>데이터 모델</li>
+<li>읽기 쓰기 성능</li>
+<li>단일 고장점</li>
+<li>원자성 지원 : 트랜잭션 지원 여부 및 어느 쪽(서버/클라이언트)에서 지원하는지</li>
+<li>하드웨어 구성</li>
+<li>무중단 시스템</li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2019/04/26/server/redis/this-is-redis/this-is-redis-4_no_sql/" data-id="cjzyxmznw00n339iqnoinzk7v" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/04/27/daily/life/daily-20190427_professionalism/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            Professionalism at work
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/04/24/server/redis/this-is-redis/this-is-redis-3_quick_start/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Redis) 이것이 레디스다 3 - 레디스 빨리 시작해보기</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/firebase-cloud-functions-eai-again-01.png)" alt="Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="title">Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류</a></p>
+                            <p class="item-date"><time datetime="2019-08-31T00:30:00.000Z" itemprop="datePublished">2019-08-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="title">쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포</a></p>
+                            <p class="item-date"><time datetime="2019-08-30T12:20:00.000Z" itemprop="datePublished">2019-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-1-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="title">쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성</a></p>
+                            <p class="item-date"><time datetime="2019-08-27T13:00:00.000Z" itemprop="datePublished">2019-08-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/16/etc/vscode/auto-save/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/vscode/auto-save-01.png)" alt="VS Code auto save 기능" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/vscode/">vscode</a></p>
+                            <p class="item-title"><a href="/2019/08/16/etc/vscode/auto-save/" class="title">VS Code auto save 기능</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T05:40:00.000Z" itemprop="datePublished">2019-08-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/14/daily/retrospect/2019-first-half/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn-images-1.medium.com/max/800/1*w9dLy2njrrkNUQVugpF-6g.jpeg)" alt="늦은 2019년 상반기 회고" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/retrospect/">retrospect</a></p>
+                            <p class="item-title"><a href="/2019/08/14/daily/retrospect/2019-first-half/" class="title">늦은 2019년 상반기 회고</a></p>
+                            <p class="item-date"><time datetime="2019-08-14T02:00:00.000Z" itemprop="datePublished">2019-08-14</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">67</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">25</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/jpa/" style="font-size: 13.64px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 16.36px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 15.45px;">algorithm</a> <a href="/tags/bash/" style="font-size: 11.82px;">bash</a> <a href="/tags/basic/" style="font-size: 11.82px;">basic</a> <a href="/tags/book/" style="font-size: 16.36px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.82px;">cloud functions</a> <a href="/tags/db/" style="font-size: 18.18px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/english/" style="font-size: 14.55px;">english</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.82px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.91px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10px;">lambda</a> <a href="/tags/linux/" style="font-size: 13.64px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 10.91px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.91px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/pagination/" style="font-size: 12.73px;">pagination</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 14.55px;">postman</a> <a href="/tags/python/" style="font-size: 11.82px;">python</a> <a href="/tags/redis/" style="font-size: 17.27px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.91px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.91px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.73px;">webrtc</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/회고/" style="font-size: 19.09px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2019/04/26/server/redis/this-is-redis/this-is-redis-4_no_sql/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+

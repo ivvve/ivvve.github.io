@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>JPA cascade | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="java,JPA,spring,cascade">
+    
+    <meta name="description" content="JPA는 부모에서 자식에게 영속성을 전이하는 기능을 제공한다.JPA를 잘 모를 때에는 이 말이 무슨 말인지 하나도 이해가 안갔다.초보자의 입장에서 그냥 간단히 말하자면 부모가 변경 될 때 해당 부모의 자식의 상태도 변경되게 하는 것이다. 예를 들자면게시물에 댓글들이 달려있다. 만약 게시물을 삭제하면 댓글들도 같이 삭제되도록 하고 싶은 것이다. 이를 위해 @">
+<meta name="keywords" content="java,JPA,spring,cascade">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JPA cascade">
+<meta property="og:url" content="http://ivvve.github.io/2019/02/12/java/JPA/cascade/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="JPA는 부모에서 자식에게 영속성을 전이하는 기능을 제공한다.JPA를 잘 모를 때에는 이 말이 무슨 말인지 하나도 이해가 안갔다.초보자의 입장에서 그냥 간단히 말하자면 부모가 변경 될 때 해당 부모의 자식의 상태도 변경되게 하는 것이다. 예를 들자면게시물에 댓글들이 달려있다. 만약 게시물을 삭제하면 댓글들도 같이 삭제되도록 하고 싶은 것이다. 이를 위해 @">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/java/JPA/cascade01.png">
+<meta property="og:updated_time" content="2019-08-31T02:31:35.098Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JPA cascade">
+<meta name="twitter:description" content="JPA는 부모에서 자식에게 영속성을 전이하는 기능을 제공한다.JPA를 잘 모를 때에는 이 말이 무슨 말인지 하나도 이해가 안갔다.초보자의 입장에서 그냥 간단히 말하자면 부모가 변경 될 때 해당 부모의 자식의 상태도 변경되게 하는 것이다. 예를 들자면게시물에 댓글들이 달려있다. 만약 게시물을 삭제하면 댓글들도 같이 삭제되도록 하고 싶은 것이다. 이를 위해 @">
+<meta name="twitter:image" content="http://ivvve.github.io/image/java/JPA/cascade01.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2019/02/12/java/jpa/cascade/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/java/">java</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/java/jpa/">JPA</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-java/JPA/cascade" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        JPA cascade
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/02/12/java/JPA/cascade/" class="article-date">
+            <time datetime="2019-02-12T09:43:00.000Z" itemprop="datePublished">2019-02-12</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/jpa/">JPA</a>, <a class="tag-link" href="/tags/cascade/">cascade</a>, <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/spring/">spring</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>JPA는 부모에서 자식에게 영속성을 전이하는 기능을 제공한다.<br>JPA를 잘 모를 때에는 이 말이 무슨 말인지 하나도 이해가 안갔다.<br>초보자의 입장에서 그냥 간단히 말하자면 부모가 변경 될 때 해당 부모의 자식의 상태도 변경되게 하는 것이다.</p>
+<p>예를 들자면<br>게시물에 댓글들이 달려있다. 만약 게시물을 삭제하면 댓글들도 같이 삭제되도록 하고 싶은 것이다.</p>
+<p>이를 위해 <strong>@OneToMany</strong>, <strong>@ManyToOne</strong>과 같은 매핑 어노테이션의 <code>cascade</code>를 통해 이를 지정할 수 있고<br><code>javax.persistence.CascadeType</code>에 여러 cascade type이 정의되어 있다.</p>
+<h5 id="FetchType"><a href="#FetchType" class="headerlink" title="FetchType"></a>FetchType</h5><ul>
+<li><p>ALL<br>cascades all entity state transitions</p>
+</li>
+<li><p>PERSIST<br>cascades the entity persist operation.</p>
+</li>
+<li><p>MERGE<br>cascades the entity merge operation.</p>
+</li>
+<li><p>REMOVE<br>cascades the entity remove operation.</p>
+</li>
+<li><p>REFRESH<br>cascades the entity refresh operation.</p>
+</li>
+<li><p>DETACH<br>cascades the entity detach operation.</p>
+</li>
+</ul>
+<p>출처 - <a href="http://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#pc-cascade" target="_blank" rel="external nofollow noopener noreferrer">http://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#pc-cascade</a></p>
+<p>쉽고 단순하게 부모에서 해당 FetchType이 실행될 때 자식에게 영속성 전이를 한다고 생각할 수 있다.<br>(FetchType.REMOVE면 부모가 <code>삭제</code>될 때 자식도 같이 <code>삭제</code>됨)<br>(FetchType.ALL의 경우 FetchType이 모두 적용)</p>
+<hr>
+<p>Spring Boot와 Spring Data JPA를 사용하여 게시물, 댓글 예제를 통해 cascade에 대해 알아보자</p>
+<h4 id="dependency는-아래와-같이-JPA-H2-Lombok-3개를-추가하여-Spring-Boot-프로젝트를-생성하였다"><a href="#dependency는-아래와-같이-JPA-H2-Lombok-3개를-추가하여-Spring-Boot-프로젝트를-생성하였다" class="headerlink" title="dependency는 아래와 같이 JPA, H2, Lombok 3개를 추가하여 Spring Boot 프로젝트를 생성하였다."></a>dependency는 아래와 같이 <strong>JPA</strong>, <strong>H2</strong>, <strong>Lombok</strong> 3개를 추가하여 Spring Boot 프로젝트를 생성하였다.</h4><p><img src="/image/java/JPA/cascade01.png" alt></p>
+<h4 id="JPA를-사용하여-개발-할-때-application-properties에-아래-property들을-추가하여-쿼리를-확인할-수-있다"><a href="#JPA를-사용하여-개발-할-때-application-properties에-아래-property들을-추가하여-쿼리를-확인할-수-있다" class="headerlink" title="JPA를 사용하여 개발 할 때 application.properties에 아래 property들을 추가하여 쿼리를 확인할 수 있다."></a>JPA를 사용하여 개발 할 때 <strong>application.properties</strong>에 아래 property들을 추가하여 쿼리를 확인할 수 있다.</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># SQL 문 확인</span><br><span class="line">spring.jpa.properties.hibernate.show_sql=true</span><br><span class="line">spring.jpa.properties.hibernate.format_sql=true</span><br><span class="line"></span><br><span class="line"># SQL paramter logging</span><br><span class="line">logging.level.org.hibernate.type=trace</span><br></pre></td></tr></table></figure>
+
+<h4 id="Board-게시물-Reply-댓글-Entity-class를-생성한다"><a href="#Board-게시물-Reply-댓글-Entity-class를-생성한다" class="headerlink" title="Board(게시물), Reply(댓글) Entity class를 생성한다."></a>Board(게시물), Reply(댓글) Entity class를 생성한다.</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Board</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="meta">@OneToMany</span>(mappedBy = <span class="string">"board"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Reply&gt; replyList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Builder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Board</span><span class="params">(String title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Reply</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line">    <span class="meta">@ManyToOne</span></span><br><span class="line">    <span class="keyword">private</span> Board board;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Builder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Reply</span><span class="params">(String content, Board board)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.content = content;</span><br><span class="line">        <span class="keyword">this</span>.board = board;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ERD로 나타내면 다음과 같다.</p>
+<p><img src="/image/java/JPA/cascade02.png" alt></p>
+<h4 id="Entity-class에-매칭되는-Repository-Interface를-생성한다"><a href="#Entity-class에-매칭되는-Repository-Interface를-생성한다" class="headerlink" title="Entity class에 매칭되는 Repository Interface를 생성한다."></a>Entity class에 매칭되는 Repository Interface를 생성한다.</h4><p>Repository interface는 간단하게 Spring data JPA의 JpaRepository를 상속받아 사용한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.example.demo.domain.Board;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.JpaRepository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BoardRepository</span> <span class="keyword">extends</span> <span class="title">JpaRepository</span>&lt;<span class="title">Board</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.example.demo.domain.Reply;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.JpaRepository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ReplyRepository</span> <span class="keyword">extends</span> <span class="title">JpaRepository</span>&lt;<span class="title">Reply</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="게시물에-댓글을-추가하고-댓글에-게시물을-지정하기-위해-Board-Reply에-코드를-추가한다"><a href="#게시물에-댓글을-추가하고-댓글에-게시물을-지정하기-위해-Board-Reply에-코드를-추가한다" class="headerlink" title="게시물에 댓글을 추가하고, 댓글에 게시물을 지정하기 위해 Board, Reply에 코드를 추가한다."></a>게시물에 댓글을 추가하고, 댓글에 게시물을 지정하기 위해 Board, Reply에 코드를 추가한다.</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Reply</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line">    <span class="meta">@ManyToOne</span></span><br><span class="line">    <span class="keyword">private</span> Board board;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Builder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Reply</span><span class="params">(String content, Board board)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.content = content;</span><br><span class="line">        <span class="keyword">this</span>.board = board;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Board setter 추가</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBoard</span><span class="params">(Board board)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.board = board;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Board</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="meta">@OneToMany</span>(mappedBy = <span class="string">"board"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Reply&gt; replyList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Builder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Board</span><span class="params">(String title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 댓글을 추가하고 댓글에 게시물을 지정하는 addReply 메서드 추가</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addReply</span><span class="params">(Reply reply)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.replyList.add(reply);</span><br><span class="line">        reply.setBoard(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="CommandLineRunner를-통해-아래-게시물-저장-코드를-실행한-후-로그를-확인해보자"><a href="#CommandLineRunner를-통해-아래-게시물-저장-코드를-실행한-후-로그를-확인해보자" class="headerlink" title="CommandLineRunner를 통해 아래 게시물 저장 코드를 실행한 후 로그를 확인해보자"></a>CommandLineRunner를 통해 아래 게시물 저장 코드를 실행한 후 로그를 확인해보자</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CommandLineRunner <span class="title">commandLineRunner</span><span class="params">(BoardRepository boardRepository, ReplyRepository replyRepository)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> args -&gt; &#123;</span><br><span class="line">            Board board = Board.builder().title(<span class="string">"게시글"</span>).build();</span><br><span class="line">            Reply reply1 = Reply.builder().content(<span class="string">"댓글1"</span>).build();</span><br><span class="line">            Reply reply2 = Reply.builder().content(<span class="string">"댓글2"</span>).build();</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"====댓글 추가===="</span>);</span><br><span class="line">            board.addReply(reply1);</span><br><span class="line">            board.addReply(reply2);</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"====게시물 저장===="</span>);</span><br><span class="line">            boardRepository.save(board);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">====댓글 추가====</span><br><span class="line">====게시물 저장====</span><br><span class="line">Hibernate: </span><br><span class="line">    insert </span><br><span class="line">    into</span><br><span class="line">        board</span><br><span class="line">        (id, title) </span><br><span class="line">    values</span><br><span class="line">        (null, ?)</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [게시글]</span><br></pre></td></tr></table></figure>
+
+<p>위 로그를 보면 게시물에 댓글 2개를 추가하고 save를 하였는데 INSERT 문은 BOARD 하나만 실행되는 것을 확인할 수 있다.<br>부모에 자식이 추가됐지만 자식에게 영속성 전이를 하지 않기 때문에 자식인 REAPLY에 대한 INSERT 문은 실행되지 않는 것이다.</p>
+<p>위 코드에서 board를 저장할 때 자식인 reply를 같이 저장되게 하려면 Board의 replyList에 걸려있는 @OneToMany에 <strong>cascade = CascadeType.PERSIST</strong> 속성을 추가하면된다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToMany</span>(mappedBy = <span class="string">"board"</span>, cascade = CascadeType.PERSIST)</span><br><span class="line"><span class="keyword">private</span> List&lt;Reply&gt; replyList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>이제 CommandLineRunner 메서드를 다시 실행하면 다음과 같이 INSERT 문이 3개 (BOARD 1, REPLY 2) 가 로그로 출력되는 것을 볼 수 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">====댓글 추가====</span><br><span class="line">====게시물 저장====</span><br><span class="line">Hibernate: </span><br><span class="line">    insert </span><br><span class="line">    into</span><br><span class="line">        board</span><br><span class="line">        (id, title) </span><br><span class="line">    values</span><br><span class="line">        (null, ?)</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [게시글]</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    insert </span><br><span class="line">    into</span><br><span class="line">        reply</span><br><span class="line">        (id, board_id, content) </span><br><span class="line">    values</span><br><span class="line">        (null, ?, ?)</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [댓글1]</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    insert </span><br><span class="line">    into</span><br><span class="line">        reply</span><br><span class="line">        (id, board_id, content) </span><br><span class="line">    values</span><br><span class="line">        (null, ?, ?)</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [댓글2]</span><br></pre></td></tr></table></figure>
+
+<h4 id="그럼-삭제는-어떨까"><a href="#그럼-삭제는-어떨까" class="headerlink" title="그럼 삭제는 어떨까?"></a>그럼 삭제는 어떨까?</h4><p>만약 <code>cascade = CascadeType.PERSIST</code>를 추가하지 않고 게시물을 저장할 때 처럼 BOARD(게시물)을 삭제하려 할 경우 BOARD만 삭제가 될 것이고<br>BOARD_ID가 foreign key로 걸려있는 REPLY(댓글)가 남아있기 때문에 SQL에서 오류가 날 것이다.<br>foreign key가 걸려있는지는 역시 쿼리 로그를 통해 확인할 수 있다.<br>(spring.jpa.hibernate.ddl-auto 속성의 값이 default는 create-drop 이기 때문에 해당 쿼리가 나온다.)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Hibernate: </span><br><span class="line">    alter table reply </span><br><span class="line">        add constraint FKcs9hiip0bv9xxfrgoj0lwv2dt </span><br><span class="line">        foreign key (board_id) </span><br><span class="line">        references board</span><br></pre></td></tr></table></figure>
+
+<p>코드로 실제로 오류가 나는지 확인해보자</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Board board = Board.builder().title(<span class="string">"게시글"</span>).build();</span><br><span class="line">Reply reply1 = Reply.builder().content(<span class="string">"댓글1"</span>).build();</span><br><span class="line">Reply reply2 = Reply.builder().content(<span class="string">"댓글2"</span>).build();</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"====댓글 추가===="</span>);</span><br><span class="line">board.addReply(reply1);</span><br><span class="line">board.addReply(reply2);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"====게시물 저장===="</span>);</span><br><span class="line">boardRepository.save(board);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"====게시물 삭제===="</span>);</span><br><span class="line">boardRepository.delete(board);</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 실행하면 다음과 같이 Exception 메세지를 뿜는 것을 볼 수 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Caused by: org.h2.jdbc.JdbcSQLException: Referential integrity constraint violation: &quot;FKCS9HIIP0BV9XXFRGOJ0LWV2DT: PUBLIC.REPLY FOREIGN KEY(BOARD_ID) REFERENCES PUBLIC.BOARD(ID) (1)&quot;; SQL statement:</span><br><span class="line">delete from board where id=? [23503-197]</span><br></pre></td></tr></table></figure>
+
+<p>이 경우에 앞서 게시물 저장과 마찬가지로 cascade를 지정해줘야한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToMany</span>(mappedBy = <span class="string">"board"</span>, cascade = &#123;CascadeType.PERSIST, CascadeType.REMOVE&#125;)</span><br><span class="line"><span class="keyword">private</span> List&lt;Reply&gt; replyList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 CascadeType.REMOVE를 추가한 다음 코드를 재실행하면 정상적으로 실행 된 후 종료가 될 것이다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Hibernate: </span><br><span class="line">    delete </span><br><span class="line">    from</span><br><span class="line">        reply </span><br><span class="line">    where</span><br><span class="line">        id=?</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    delete </span><br><span class="line">    from</span><br><span class="line">        reply </span><br><span class="line">    where</span><br><span class="line">        id=?</span><br><span class="line"> o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [2]</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    delete </span><br><span class="line">    from</span><br><span class="line">        board </span><br><span class="line">    where</span><br><span class="line">        id=?</span><br><span class="line">o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]</span><br></pre></td></tr></table></figure>
+
+<p>위 DELETE 쿼리를 날리기 전 해당 BOARD가 갖고 있는 REPLY를 찾기 위해 SELECT 문을 사용할 것이다.<br>총 4개의 SELECT 문을 사용하는데 @OneToMany의 default fet가 FetchType.LAZY이기 때문에 쿼리를 여러개 사용한다.<br>이 경우 아래와 같이 @OneToMany에 <code>fetch = FetchType.EAGER</code> 속성을 추가하면 쿼리문이 줄어들게 된다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToMany</span>(mappedBy = <span class="string">"board"</span>, cascade = &#123;CascadeType.PERSIST, CascadeType.REMOVE&#125;, fetch = FetchType.EAGER)</span><br><span class="line"><span class="keyword">private</span> List&lt;Reply&gt; replyList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>FetchType 설정 전</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        board0_.id as id1_0_0_,</span><br><span class="line">        board0_.title as title2_0_0_ </span><br><span class="line">    from</span><br><span class="line">        board board0_ </span><br><span class="line">    where</span><br><span class="line">        board0_.id=?</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        reply0_.id as id1_1_0_,</span><br><span class="line">        reply0_.board_id as board_id3_1_0_,</span><br><span class="line">        reply0_.content as content2_1_0_,</span><br><span class="line">        board1_.id as id1_0_1_,</span><br><span class="line">        board1_.title as title2_0_1_ </span><br><span class="line">    from</span><br><span class="line">        reply reply0_ </span><br><span class="line">    left outer join</span><br><span class="line">        board board1_ </span><br><span class="line">            on reply0_.board_id=board1_.id </span><br><span class="line">    where</span><br><span class="line">        reply0_.id=?</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        reply0_.id as id1_1_0_,</span><br><span class="line">        reply0_.board_id as board_id3_1_0_,</span><br><span class="line">        reply0_.content as content2_1_0_,</span><br><span class="line">        board1_.id as id1_0_1_,</span><br><span class="line">        board1_.title as title2_0_1_ </span><br><span class="line">    from</span><br><span class="line">        reply reply0_ </span><br><span class="line">    left outer join</span><br><span class="line">        board board1_ </span><br><span class="line">            on reply0_.board_id=board1_.id </span><br><span class="line">    where</span><br><span class="line">        reply0_.id=?</span><br><span class="line">        </span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        replylist0_.board_id as board_id3_1_0_,</span><br><span class="line">        replylist0_.id as id1_1_0_,</span><br><span class="line">        replylist0_.id as id1_1_1_,</span><br><span class="line">        replylist0_.board_id as board_id3_1_1_,</span><br><span class="line">        replylist0_.content as content2_1_1_ </span><br><span class="line">    from</span><br><span class="line">        reply replylist0_ </span><br><span class="line">    where</span><br><span class="line">        replylist0_.board_id=?</span><br></pre></td></tr></table></figure>
+
+<p>fetch = FetchType.EAGER 설정 후</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">====게시물 삭제====</span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        board0_.id as id1_0_0_,</span><br><span class="line">        board0_.title as title2_0_0_ </span><br><span class="line">    from</span><br><span class="line">        board board0_ </span><br><span class="line">    where</span><br><span class="line">        board0_.id=?</span><br><span class="line"></span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        replylist0_.board_id as board_id3_1_0_,</span><br><span class="line">        replylist0_.id as id1_1_0_,</span><br><span class="line">        replylist0_.id as id1_1_1_,</span><br><span class="line">        replylist0_.board_id as board_id3_1_1_,</span><br><span class="line">        replylist0_.content as content2_1_1_ </span><br><span class="line">    from</span><br><span class="line">        reply replylist0_ </span><br><span class="line">    where</span><br><span class="line">        replylist0_.board_id=?</span><br></pre></td></tr></table></figure>
+
+<p>지금은 쿼리 몇개의 차이밖에 없지만 만약 게시물의 댓글이 더 많다면 <code>n + 1 문제</code>의 영향을 받을 수 있기 때문에 지금의 케이스에서는 FetchType을 EAGER로 설정하는게 더 효과적이다.<br>하지만 실제 앱개발시에는 여러 상황을 고려해야하기 때문에 테스트를 거쳐 보다 안정적이고 효과적인 fetch type을 선택해야할 것이다.</p>
+<hr>
+<p>삭제가 되는 것을 보고 <code>ON DELETE CASCADE</code>를 사용하는 건가? 라고 생각했었지만<br>콘솔에서 Table CREATE 쿼리를 확인했을 때 DB에서 Table에 ON DELETE CASCADE를 적용하는 건 아닌 것 같고<br>위 DELETE의 예제를 봤을 때 DELETE 쿼리를 생성하기 때문에 Hibernate에서 cascade를 관리하는 것 같다.</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2019/02/12/java/JPA/cascade/" data-id="cjzyxmzmv00jd39iqpn7zhlrp" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/02/16/daily/life/daily-20190216/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            20190216
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/02/10/daily/retrospect/201902_second/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">2019년 2월 둘째주 회고</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/firebase-cloud-functions-eai-again-01.png)" alt="Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="title">Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류</a></p>
+                            <p class="item-date"><time datetime="2019-08-31T00:30:00.000Z" itemprop="datePublished">2019-08-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="title">쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포</a></p>
+                            <p class="item-date"><time datetime="2019-08-30T12:20:00.000Z" itemprop="datePublished">2019-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-1-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="title">쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성</a></p>
+                            <p class="item-date"><time datetime="2019-08-27T13:00:00.000Z" itemprop="datePublished">2019-08-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/16/etc/vscode/auto-save/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/vscode/auto-save-01.png)" alt="VS Code auto save 기능" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/vscode/">vscode</a></p>
+                            <p class="item-title"><a href="/2019/08/16/etc/vscode/auto-save/" class="title">VS Code auto save 기능</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T05:40:00.000Z" itemprop="datePublished">2019-08-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/14/daily/retrospect/2019-first-half/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn-images-1.medium.com/max/800/1*w9dLy2njrrkNUQVugpF-6g.jpeg)" alt="늦은 2019년 상반기 회고" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/retrospect/">retrospect</a></p>
+                            <p class="item-title"><a href="/2019/08/14/daily/retrospect/2019-first-half/" class="title">늦은 2019년 상반기 회고</a></p>
+                            <p class="item-date"><time datetime="2019-08-14T02:00:00.000Z" itemprop="datePublished">2019-08-14</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">67</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">25</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/jpa/" style="font-size: 13.64px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 16.36px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 15.45px;">algorithm</a> <a href="/tags/bash/" style="font-size: 11.82px;">bash</a> <a href="/tags/basic/" style="font-size: 11.82px;">basic</a> <a href="/tags/book/" style="font-size: 16.36px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.82px;">cloud functions</a> <a href="/tags/db/" style="font-size: 18.18px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/english/" style="font-size: 14.55px;">english</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.82px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.91px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10px;">lambda</a> <a href="/tags/linux/" style="font-size: 13.64px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 10.91px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.91px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/pagination/" style="font-size: 12.73px;">pagination</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 14.55px;">postman</a> <a href="/tags/python/" style="font-size: 11.82px;">python</a> <a href="/tags/redis/" style="font-size: 17.27px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.91px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.91px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.73px;">webrtc</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/회고/" style="font-size: 19.09px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2019/02/12/java/JPA/cascade/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+

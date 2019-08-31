@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>Getting Started with WebRTC 정리 02 | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="webrtc">
+    
+    <meta name="description" content="This post is a summary of the book Rob Manson’s Getting Started with WebRTC  A More Thechnical Introduction to Web-based Real-Time Communication이 장에서는 새로운 Web 기반 실시간 통신(WebRTC)의 기술적인 컨셉에 대해 설명한다. 통신 설">
+<meta name="keywords" content="webrtc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Getting Started with WebRTC 정리 02">
+<meta property="og:url" content="http://ivvve.github.io/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="This post is a summary of the book Rob Manson’s Getting Started with WebRTC  A More Thechnical Introduction to Web-based Real-Time Communication이 장에서는 새로운 Web 기반 실시간 통신(WebRTC)의 기술적인 컨셉에 대해 설명한다. 통신 설">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/etc/webrtc/getting-started-with-webrtc-02-001.png">
+<meta property="og:updated_time" content="2019-08-31T02:31:35.090Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Getting Started with WebRTC 정리 02">
+<meta name="twitter:description" content="This post is a summary of the book Rob Manson’s Getting Started with WebRTC  A More Thechnical Introduction to Web-based Real-Time Communication이 장에서는 새로운 Web 기반 실시간 통신(WebRTC)의 기술적인 컨셉에 대해 설명한다. 통신 설">
+<meta name="twitter:image" content="http://ivvve.github.io/image/etc/webrtc/getting-started-with-webrtc-02-001.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/etc/webrtc/">webrtc</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-etc/webrtc/getting-started-with-webrtc-02" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Getting Started with WebRTC 정리 02
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/" class="article-date">
+            <time datetime="2019-08-04T05:20:00.000Z" itemprop="datePublished">2019-08-04</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/webrtc/">webrtc</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>This post is a summary of the book <strong><a href="https://www.amazon.com/Getting-Started-WebRTC-Rob-Manson-ebook/dp/B00FF8OJZE" target="_blank" rel="external nofollow noopener noreferrer">Rob Manson’s <code>Getting Started with WebRTC</code></a></strong></p>
+<hr>
+<h1 id="A-More-Thechnical-Introduction-to-Web-based-Real-Time-Communication"><a href="#A-More-Thechnical-Introduction-to-Web-based-Real-Time-Communication" class="headerlink" title="A More Thechnical Introduction to Web-based Real-Time Communication"></a>A More Thechnical Introduction to Web-based Real-Time Communication</h1><p>이 장에서는 새로운 Web 기반 실시간 통신(WebRTC)의 기술적인 컨셉에 대해 설명한다.</p>
+<h2 id="통신-설정하기-setting-up"><a href="#통신-설정하기-setting-up" class="headerlink" title="통신 설정하기 (setting up)"></a>통신 설정하기 (setting up)</h2><p>WebRTC 통신의 기초는 peer-to-peer 이지만, 이 통신의 설정(settint up)을 시작하기 위해서는 약간의 조정이 필요하다.<br>이는 주로 웹 서버와/또는 시그널링 서버가 제공한다.<br>이를 통해 2개 이상의 WebRTC가 가능한 디바이스나 peer들이 서로를 찾고, 상세 연결 정보를 교환하고, 어떻게 peer들이 통신할지를 정의하는 세션을 협상(negotiate)한다.<br>그리고 이제 마지막으로 peer들 사이의 직접적인 peer-to-peer 미디어 스트림이 성립(establish)된다.</p>
+<h2 id="일반적인-흐름"><a href="#일반적인-흐름" class="headerlink" title="일반적인 흐름"></a>일반적인 흐름</h2><p>아래는 두 브라우저가 단순한 WebRTC를 사용하여 비디오 통화를 설정할 때 할 때의 일반적인 흐름의 요약이다.</p>
+<ul>
+<li>사용자들을 연결한다.</li>
+<li>시그널을 시작한다.</li>
+<li>후보자들(candidates)을 찾는다.</li>
+<li>미디어 세션을 협상한다.</li>
+<li>RTCPeerConnection 스트림을 시작한다.</li>
+</ul>
+<h3 id="사용자-연결"><a href="#사용자-연결" class="headerlink" title="사용자 연결"></a>사용자 연결</h3><p>이 프로세스의 가장 처음 단계는 두 사용자가 어떻게든 연결하는 것이다.<br>가장 단순한 방법으로는 두 사용자가 같은 웹사이트를 들어가는 것이다.<br>이 페이지는 각 브라우저를 식별하고 WebSocket API 등을 사용하여 공유된 시그널링 서버에 연결시킬 수 있다.<br>이런 웹페이지는 주로 두 브라우저 사이에 통신을 연결하기 위해 사용되는 unique 토큰을 할당한다.<br>첫 번째 사용자가 웹페이지로부터 받은 unique 토큰이 포함된 unique URL을 두 번째 사용자에게 보내면, 둘이 서로 같은 URL을 접속하면 첫 번째 단계는 완료된다.</p>
+<h3 id="시그널-시작"><a href="#시그널-시작" class="headerlink" title="시그널 시작"></a>시그널 시작</h3><p>이제 두 사용자가 토큰을 공유하고 있고, WebRTC 연결을 설정을 협상하는 시그널링 메시지를 교환할 수 있다.<br>이 컨텍스트 내에서, <code>시그널링 메시지</code>는 단순한 통신의 어느(any) 형식으로, 두 브라우저가 WebRTC 연결을 성립(establish)하고 제어(control)하는 것을 도와준다.<br>WebRTC는 정확하게 이를 정확히 정의해놓지 않았기 때문에 XHR polling, Server-Send Events, 웹소켓, 또는 여러 조합들을 통해 개발자가 편한 방식으로 구현할 수 있다.</p>
+<h3 id="후보자들-candidates-찾기"><a href="#후보자들-candidates-찾기" class="headerlink" title="후보자들(candidates) 찾기"></a>후보자들(candidates) 찾기</h3><p>다음 단계는 두 브라우저가 자신의 네트워크와 어떻게 접근할 수 있는지에 대한 정보를 교환하는 것이다.<br>이 과정은 주로 <code>후보자들 찾기(finding cadidates)</code>로 설명되며,<br>결국에 각 브라우저는 직접 접근할 수 있는 네트워크 인터페이스와 포트에 매핑되어야한다.</p>
+<p>각 브라우저는 아마 NAT(Network Address Translation)를 사용하는 라우터 뒤에 있을 것이다.<br>이 라우터를 통해 연결 방법을 찾는 방법은 <a href="http://en.wikipedia.org/wiki/NAT_traversal" target="_blank" rel="external nofollow noopener noreferrer">NAT Traversal</a>이라고 알려져 있고, WebRTC 통신을 성립할 때 매우 중요하다.</p>
+<p>NAT Traversal의 일반적인 방법은 STUN(Session Traversal Utilities for NAT) 서버를 사용하는 것이다.<br>STUN 서버는 public 인터넷으로부터 어떻게 접근하는지를 식별하고 유용한 형식(useful form)으로 이 정보를 돌려준다.</p>
+<p>만약 STUN 서버가 public 인터넷으로 부터 브라우저로 접속할 수 있는 방법을 찾지 못할 경우,<br><a href="http://en.wikipedia.org/wiki/Traversal_Using_Relay_NAT" target="_blank" rel="external nofollow noopener noreferrer">TURN(Traversal Using Relay NAT)</a> 서버와 같은 미디어 중계(realy) 솔루션을 사용하는 옵션 밖에 없다.</p>
+<p>WebRTC에서는, 이 전체 과정이 주로 하나의 <a href="http://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment" target="_blank" rel="external nofollow noopener noreferrer">ICE(Interactive Connectivity Establishment)</a> framework로 묶여있다.<br>ICE framework는 STUN 서버로 접속과 필요할 때 TURN 서버로 전환(falling back)하는 것을 다룬다.</p>
+<h3 id="미디어-세션-협상"><a href="#미디어-세션-협상" class="headerlink" title="미디어 세션 협상"></a>미디어 세션 협상</h3><p>이제 두 브라우저는 어떻게 서로에게 통신할 지를 알고 있다.<br>이들은 오디오나 비디오 같은 미디어의 타입과 형식(format)을 동의해야만 하고,<br>이들은 코덱, 해상도, 비트레이트 등을 교환할 것이다.<br>이는 주로 <a href="http://en.wikipedia.org/wiki/Session_Description_Protocol" target="_blank" rel="external nofollow noopener noreferrer">SDP(Session Description Protocol)</a> 위에서 만들어진 offer/answer 기반의 모델을 사용해서 협상된다.<br>이는 <a href="http://tools.ietf.org/html/draft-ietf-rtcweb-jsep-00" target="_blank" rel="external nofollow noopener noreferrer">JSEP(JavaScript Session Establishment Protocol)</a>으로 정의되어있다.</p>
+<h3 id="RTCPeerConnection-스트림-시작"><a href="#RTCPeerConnection-스트림-시작" class="headerlink" title="RTCPeerConnection 스트림 시작"></a>RTCPeerConnection 스트림 시작</h3><p>위 과정이 완료되면, 브라우저들은 직접 peer-to-peer 연결이나 fall back 용으로 사용하는 어느 media realy gateway를 통해서 드디어 서로에게 미디어 스트리밍을 시작한다.</p>
+<p>이 단계에서, 브라우저들은 같은 WebRTC 통신을 제어하기 위한 통신 공유용 시그널링 서버 솔루션을 계속 사용할 수 있다.<br>혹은 서로 이를 직접하기 위해 특정한 타입의 WebRTC 데이터 채널을 사용할 수 있다.</p>
+<h2 id="웹소켓-사용하기"><a href="#웹소켓-사용하기" class="headerlink" title="웹소켓 사용하기"></a>웹소켓 사용하기</h2><p>WebSocket API는 웹 애플리케이션에서 양방향 통신을 쉽게 사용할 수 있게해주었다.<br>WebSocket API의 주요 장점은 메시징이 양방향에 빠르고 가볍다는 것이다.<br>XHR polling/long-polling 모델과는 달리 지연이나 지속적인 네트워크 트래픽이 없고<br>이는 WebRTC 통신을 설정하기 위해 필요한 offer/answer dance에 있어 이상적이다.</p>
+<h2 id="다른-시그널링-옵션"><a href="#다른-시그널링-옵션" class="headerlink" title="다른 시그널링 옵션"></a>다른 시그널링 옵션</h2><p>브라우저들이 서버를 통해 메세지를 주고 받을 수 있는 그 어떤 접근 방법이라도 WebRTC 시그널링에 사용될 수 있다.</p>
+<p>가장 간단한 모델은 XHR API를 사용하여 새로운 메세지를 가져오기 위해 주기적으로 서버에 polling하는 것이다.<br>하지만 이는 많은 문제점이 있는데, 각 polling 사이클의 주기에 따라 딜레이가 있고,<br>또한 메세지가 없어도 polling을 반복함으로써 네트워크 대역폭을 낭비한다.</p>
+<p>polling 기반의 약간 더 세련된 접근법은 long-polling이다.<br>만약 새로운 메세지가 없다면, HTTP 1.1 keep-alive 메카니즘을 사용하여 네트워크 접속은 메세지가 있을 때까지 계속 살아있는다.<br>서버가 새로운 정보가 있다면, 이를 클라이언트에게 보내게되고 요청이 완료된다.<br>이를 통해 네트워크 polling 오버헤드가 줄어든다.<br>하지만 여전히 웹소켓과 같은 모던한 해법들에 비해선 오래되고 비효율적인 방식이다.</p>
+<p>또다른 옵션으로는 Server-Sent Event가 있다.<br>이를 통해 서버가 클라이언트에게 직접 메세지를 보낼 수 있고, 클라이언트는 메세지가 발생하자마자 이를 받을 수 있다.<br>메세지를 서버에 보내기 위해 XHR과 같은 별도의 채널을 사용해야한다.<br>이는 두 개의 나뉘어진 채널들을 관리하고 동기화해야한다는 것이다.<br>이 조합은 쓸만하지만, 이 역시 웹소켓과 같은 진정한 양방향 채널의 우아함을 갖진 않는다.</p>
+<h2 id="MediaStream-API"><a href="#MediaStream-API" class="headerlink" title="MediaStream API"></a>MediaStream API</h2><p>MediaStream API는 이를 통해 카메라나 마이크로폰 같은 로컬 입력 디바이스들로부터 미디어 스트림에 접근하도록 설계되었다.<br>초기에는 getUserMedia API에 초점이 맞춰져 있었지만, 현재는 boarder media capture and streams API 또는 짧게 MediaStream API로 규격화되어있다.<br>하지만 getUserMedia() 메서드는 여전히 로컬 입력 디바이스에 접근을 시작하기 위한 중요한(primary) 방법이다.</p>
+<p>각 MediaStream 객체는 다른 입력 미디어를 가리키는 다양한 MediaStreamTrack 객체들을 가질 수 있다.<br>각 MediaStreamTrack은 여러 채널을 가질 수 있으며(왼쪽, 오른쪽 오디오 채널과 같이) 이 채널들은 MediaStream API에서 정의된 가장 최소 단위이다.</p>
+<p>MediaStream 객체는 두 가지 방식으로 출력이 될 수 있다.</p>
+<ol>
+<li><code>&lt;video&gt;</code>나 <code>&lt;audio&gt;</code>와 같은 <strong>MediaElement</strong>에 출력을 보여주기(render) 사용될 수 있다.</li>
+<li>외부 peer에게 이 media stream을 보낼 수 있는 <strong>RTCPeerConnection</strong>에 보내기 위해 사용될 수 있다.</li>
+</ol>
+<p>MediaStreamTrack은 <strong>MediaSourceStates</strong>로 표현되는 객체로 많은 상태로 나타내질 수 있다.<br>또한 MediaStreamTrack은 capabilities() 메서드를 통해 다양한 capabilities를 제공한다.</p>
+<h2 id="RTCPeerConnection-API"><a href="#RTCPeerConnection-API" class="headerlink" title="RTCPeerConnection API"></a>RTCPeerConnection API</h2><p>RTCPeerConnection API는 WebRTC가 가능한 브라우저와 peer 사이의 peer-to-peer 연결에서 가장 중요하다.<br>RTCPeerConnection 객체는 각 클라이언트에 따라(caller냐 callee냐에 따라) 약간 다른 방식으로 사용된다.</p>
+<h3 id="Caller의-흐름-flow"><a href="#Caller의-흐름-flow" class="headerlink" title="Caller의 흐름(flow)"></a>Caller의 흐름(flow)</h3><p>RTCPeerConnection이 생성된 후 caller의 흐름은 아래와 같다.</p>
+<ul>
+<li><p><strong>onicecandidate</strong> handler 등록<br>먼저 시그널링 채널들 중 하나를 사용하여 받은 ICE candidates를 다른 피어에게 보내기 위해 onicecandidate handler를 등록해야한다.</p>
+</li>
+<li><p><strong>onaddstream</strong> handler 등록<br>다음, 외부 피어로 부터 받은 video stream 화면에 보여주기 위해 <strong>onaddstream</strong> handler를 등록한다.</p>
+</li>
+<li><p><strong>message</strong> handler 등록<br>시그널링 채널은 다른 피어로부터 받은 메세지를 응답하기 위해 등록된 핸들러를 갖고 있어야한다.</p>
+</li>
+<li><p>로컬 카메라에 접근하기 위해 <strong>getUserMedia</strong> 사용<br>로컬 media stream를 설정하고 로컬 페이지에 표시하고 또, 이를 addStream() 메서드를 사용하여 RTCPeerConnection 객체에 추가하기 위해, getUserMedia()를 사용할 수 있다.</p>
+</li>
+<li><p><strong>JSEP offer/answer</strong> 처리<br>이제, createOffer() 메서드를 사용하고, RTCSessionDescription 객체를 받는 콜백 handler를 등록을 하여 협상을 시작할 준비가 되었다.<br>그리고 드디어, RTCSessionDescription을 시그널링 채널을 통해 외부 피어로 보낸다.</p>
+</li>
+</ul>
+<h3 id="Callee의-흐름-flow"><a href="#Callee의-흐름-flow" class="headerlink" title="Callee의 흐름(flow)"></a>Callee의 흐름(flow)</h3><p>callee는 caller와 매우 비슷하지만, offer를 answer하는 부분이 다르다.</p>
+<ul>
+<li><p><strong>onicecandidate</strong> handler 등록<br>caller와 같이 <strong>onicecandidate</strong> handler를 등록함으로서 시작한다.</p>
+</li>
+<li><p><strong>onaddstream</strong> handler 등록<br>caller와 같다.</p>
+</li>
+<li><p><strong>meessage</strong> handler 등록<br>caller와 같다.</p>
+</li>
+<li><p>로컬 카메라에 접근하기 위해 <strong>getUserMedia</strong> 사용<br>caller와 같다.</p>
+</li>
+<li><p>JSEP offer/answer 처리<br>caller와 같지만, caller로 부터 offer를 받은 이후 callee의 흐름(flow)가 시작된다는 것이 중요하다.</p>
+</li>
+</ul>
+<h2 id="RTCPeerConnection은-어디에-위치할까"><a href="#RTCPeerConnection은-어디에-위치할까" class="headerlink" title="RTCPeerConnection은 어디에 위치할까?"></a>RTCPeerConnection은 어디에 위치할까?</h2><p>아래 다이어그램은 <a href="https://webrtc.org/architecture/" target="_blank" rel="external nofollow noopener noreferrer">WebRTC 아키텍쳐</a>이다.<br>이처럼 RTCPeerConnectionAPI 밑에 아래 처럼 복잡한 레이어들이 숨겨져있다.</p>
+<p><img src="/image/etc/webrtc/getting-started-with-webrtc-02-001.png" alt></p>
+<h2 id="RTCDataChannel-API"><a href="#RTCDataChannel-API" class="headerlink" title="RTCDataChannel API"></a>RTCDataChannel API</h2><p>WebRTC를 사용하여 피어들간 미디어 스트림을 보낼 때 뿐만 아니라,<br>임의의 데이터 스트림을 보내기 위해 DataChannel API를 사용하는 것도 가능하다.<br>많은 사람들이 주로 이를 RTCDataChanenel API라 언급하지만, 정확히는 WebRTC DataChannel API이다.<br>이는 send() 메서드와 onmessage 이벤트를 통해 웹소켓과 유사하도록 설계된 매우 유연하고 강력한 솔루션이다.</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/" data-id="cjzyxmzn400k039iquk9wrxgm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/08/07/daily/retrospect/201908/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            8월 회고
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/08/04/etc/webrtc/getting-started-with-webrtc-01/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Getting Started with WebRTC 정리 01</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/firebase-cloud-functions-eai-again-01.png)" alt="Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="title">Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류</a></p>
+                            <p class="item-date"><time datetime="2019-08-31T00:30:00.000Z" itemprop="datePublished">2019-08-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="title">쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포</a></p>
+                            <p class="item-date"><time datetime="2019-08-30T12:20:00.000Z" itemprop="datePublished">2019-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-1-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="title">쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성</a></p>
+                            <p class="item-date"><time datetime="2019-08-27T13:00:00.000Z" itemprop="datePublished">2019-08-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/16/etc/vscode/auto-save/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/vscode/auto-save-01.png)" alt="VS Code auto save 기능" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/vscode/">vscode</a></p>
+                            <p class="item-title"><a href="/2019/08/16/etc/vscode/auto-save/" class="title">VS Code auto save 기능</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T05:40:00.000Z" itemprop="datePublished">2019-08-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/14/daily/retrospect/2019-first-half/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn-images-1.medium.com/max/800/1*w9dLy2njrrkNUQVugpF-6g.jpeg)" alt="늦은 2019년 상반기 회고" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/retrospect/">retrospect</a></p>
+                            <p class="item-title"><a href="/2019/08/14/daily/retrospect/2019-first-half/" class="title">늦은 2019년 상반기 회고</a></p>
+                            <p class="item-date"><time datetime="2019-08-14T02:00:00.000Z" itemprop="datePublished">2019-08-14</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">67</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">25</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/jpa/" style="font-size: 13.64px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 16.36px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 15.45px;">algorithm</a> <a href="/tags/bash/" style="font-size: 11.82px;">bash</a> <a href="/tags/basic/" style="font-size: 11.82px;">basic</a> <a href="/tags/book/" style="font-size: 16.36px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.82px;">cloud functions</a> <a href="/tags/db/" style="font-size: 18.18px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/english/" style="font-size: 14.55px;">english</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.82px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.91px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10px;">lambda</a> <a href="/tags/linux/" style="font-size: 13.64px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 10.91px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.91px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/pagination/" style="font-size: 12.73px;">pagination</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 14.55px;">postman</a> <a href="/tags/python/" style="font-size: 11.82px;">python</a> <a href="/tags/redis/" style="font-size: 17.27px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.91px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.91px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.73px;">webrtc</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/회고/" style="font-size: 19.09px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2019/08/04/etc/webrtc/getting-started-with-webrtc-02/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+

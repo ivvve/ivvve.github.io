@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포 | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="firebase,cloud functions">
+    
+    <meta name="description" content="저번 글에서는 어떻게 프로젝트를 생성하는지를 알아보았고,이번 글에서는 함수를 작성하고 배포하는 방법을 알아보도록 하겠다. 저번 글에서 CLI로 생성한 프로젝트 디렉토리를 보면 functions/index.js가 기본적으로 생성되어 있는데,index.js를 보면 함수 기본 템플릿이 주석 처리되어있다. 12345678910// functions/index.js">
+<meta name="keywords" content="firebase,cloud functions">
+<meta property="og:type" content="article">
+<meta property="og:title" content="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포">
+<meta property="og:url" content="http://ivvve.github.io/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="저번 글에서는 어떻게 프로젝트를 생성하는지를 알아보았고,이번 글에서는 함수를 작성하고 배포하는 방법을 알아보도록 하겠다. 저번 글에서 CLI로 생성한 프로젝트 디렉토리를 보면 functions/index.js가 기본적으로 생성되어 있는데,index.js를 보면 함수 기본 템플릿이 주석 처리되어있다. 12345678910// functions/index.js">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png">
+<meta property="og:updated_time" content="2019-08-31T02:31:35.083Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포">
+<meta name="twitter:description" content="저번 글에서는 어떻게 프로젝트를 생성하는지를 알아보았고,이번 글에서는 함수를 작성하고 배포하는 방법을 알아보도록 하겠다. 저번 글에서 CLI로 생성한 프로젝트 디렉토리를 보면 functions/index.js가 기본적으로 생성되어 있는데,index.js를 보면 함수 기본 템플릿이 주석 처리되어있다. 12345678910// functions/index.js">
+<meta name="twitter:image" content="http://ivvve.github.io/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/etc/firebase/">firebase</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-etc/firebase/functions/easy-firebase-cloud-functions-2" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="article-date">
+            <time datetime="2019-08-30T12:20:00.000Z" itemprop="datePublished">2019-08-30</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/cloud-functions/">cloud functions</a>, <a class="tag-link" href="/tags/firebase/">firebase</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>저번 글에서는 어떻게 프로젝트를 생성하는지를 알아보았고,<br>이번 글에서는 함수를 작성하고 배포하는 방법을 알아보도록 하겠다.</p>
+<p>저번 글에서 CLI로 생성한 프로젝트 디렉토리를 보면 <code>functions/index.js</code>가 기본적으로 생성되어 있는데,<br><code>index.js</code>를 보면 함수 기본 템플릿이 주석 처리되어있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// functions/index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> functions = <span class="built_in">require</span>(<span class="string">'firebase-functions'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// // Create and Deploy Your First Cloud Functions</span></span><br><span class="line"><span class="comment">// // https://firebase.google.com/docs/functions/write-firebase-functions</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// exports.helloWorld = functions.https.onRequest((request, response) =&gt; &#123;</span></span><br><span class="line"><span class="comment">//  response.send("Hello from Firebase!");</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br></pre></td></tr></table></figure>
+
+<p>간단하게 주석을 풀면 “Hello from Firebase!”를 응답하는 <strong>helloWorld</strong> 함수를 생성한 것이다.<br>(게다가 주석에 친절하게 기초 가이드 링크도 있다)</p>
+<p>그러면 아래와 같이 함수 부분에 주석을 풀고 불필요한 주석을 제거해보자.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// functions/index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> functions = <span class="built_in">require</span>(<span class="string">'firebase-functions'</span>);</span><br><span class="line"></span><br><span class="line">exports.helloWorld = functions.https.onRequest(<span class="function">(<span class="params">request, response</span>) =&gt;</span> &#123;</span><br><span class="line">    response.send(<span class="string">"Hello from Firebase!"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>이제 이 <strong>helloWorld</strong> 함수를 배포할 수 있지만, 그래도 로컬에서 한 번 테스트를 해보는 편이 좋을 것 같다.<br>함수를 로컬에서 실행시키고자 할 경우, <code>firebase serve</code> 커맨드를 입력하면 실행하면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ firebase serve</span><br><span class="line"></span><br><span class="line">=== Serving from <span class="string">'C:\Users\sonyc\my\study\firebase\cloud-functions-tutorial'</span>...</span><br><span class="line"></span><br><span class="line">+  <span class="built_in">functions</span>: Using node@8 from host.</span><br><span class="line">+  <span class="built_in">functions</span>: Emulator started at http://localhost:5000</span><br><span class="line">i  <span class="built_in">functions</span>: Watching <span class="string">"C:\Users\sonyc\my\study\firebase\cloud-functions-tutorial\functions"</span> <span class="keyword">for</span> Cloud Functions...</span><br><span class="line">+  <span class="built_in">functions</span>[helloWorld]: http <span class="keyword">function</span> initialized (http://localhost:5000/devson-cloud-functions/us-central1/helloWorld).</span><br></pre></td></tr></table></figure>
+
+<p>Postman으로 콘솔에 찍힌 URL로 요청을 보내면 response.send 메서드의 파라미터를 보내는 것을 확인할 수 있다.</p>
+<p><img src="/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png" alt></p>
+<p>이제 확인은 했으니 Firebase 서버로 배포를 하자.<br>함수를 배포할 때는 <code>firebase deploy --only functions</code> 커맨드를 사용한다.<br>해당 커맨드는 Firebase 프로젝트에 함수(Cloud Functions)만을 배포한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ firebase deploy --only <span class="built_in">functions</span></span><br><span class="line"></span><br><span class="line">=== Deploying to <span class="string">'devson-cloud-functions'</span>...</span><br><span class="line"></span><br><span class="line">i  deploying <span class="built_in">functions</span></span><br><span class="line">i  <span class="built_in">functions</span>: ensuring necessary APIs are enabled...</span><br><span class="line">+  <span class="built_in">functions</span>: all necessary APIs are enabled</span><br><span class="line">i  <span class="built_in">functions</span>: preparing <span class="built_in">functions</span> directory <span class="keyword">for</span> uploading...</span><br><span class="line">i  <span class="built_in">functions</span>: packaged <span class="built_in">functions</span> (22.7 KB) <span class="keyword">for</span> uploading</span><br><span class="line">+  <span class="built_in">functions</span>: <span class="built_in">functions</span> folder uploaded successfully</span><br><span class="line">i  <span class="built_in">functions</span>: creating Node.js 8 <span class="keyword">function</span> helloWorld(us-central1)...</span><br><span class="line">+  <span class="built_in">functions</span>[helloWorld(us-central1)]: Successful create operation.</span><br><span class="line">Function URL (helloWorld): https://us-central1-devson-cloud-functions.cloudfunctions.net/helloWorld</span><br><span class="line"></span><br><span class="line">+  Deploy complete!</span><br><span class="line"></span><br><span class="line">Project Console: https://console.firebase.google.com/project/devson-cloud-functions/overview</span><br></pre></td></tr></table></figure>
+
+<p>배포가 성공적으로 완료되었다면 콘솔에 출력된 Project Console URL에 접속 후 Functions 탭에 들어가면,<br>우리가 배포한 <code>helloWorld</code> 함수가 있는 것을 확인할 수 있다.</p>
+<p><img src="/image/etc/firebase/functions/easy-firebase-cloud-functions-2-02.png" alt></p>
+<p>이제 이 함수가 실제로 잘 배포되었는지 요청을 해보자.<br><strong>트리거</strong> 컬럼에 있는 URL로 호출을 하면 로컬에서 테스트한 것과 같은 결과를 받을 수 있다.</p>
+<p><img src="/image/etc/firebase/functions/easy-firebase-cloud-functions-2-03.png" alt></p>
+<p>여기서 추가로 함수를 하나 더 만들어보자.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// functions/index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> functions = <span class="built_in">require</span>(<span class="string">'firebase-functions'</span>);</span><br><span class="line"></span><br><span class="line">exports.helloWorld = functions.https.onRequest(<span class="function">(<span class="params">request, response</span>) =&gt;</span> &#123;</span><br><span class="line">    response.send(<span class="string">"Hello from Firebase!"</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 추가 된 greet 함수</span></span><br><span class="line">exports.greet = functions.https.onRequest(<span class="function">(<span class="params">request, response</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; name &#125; = request.body;</span><br><span class="line">    response.send(<span class="string">`Hello <span class="subst">$&#123;name&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>위 <code>greet</code> 함수는 사용자 request의 body에서 <code>name</code>을 가져와 인사를 하는 함수이다. :)<br>이 함수도 마찬가지로 <code>firebase serve</code>를 통해 로컬에서 테스트해보자.</p>
+<p><img src="/image/etc/firebase/functions/easy-firebase-cloud-functions-2-04.png" alt></p>
+<p>이제 이 함수를 배포하면 되는데,<br><code>firebase deploy --only functions</code>의 경우 모든 함수를 배포한다.<br>하지만 이 경우 변경되지 않은 함수 또한 같이 재배포되기 때문에 비효율적이다.<br>그래서 방금 새로 만든 <strong>greet</strong> 함수만 배포한다면 효율적이고 이전 함수에도 영향을 주지 않을 것이다.</p>
+<p>Firebase CLI에는 앞서 설명한 특정 함수만을 배포하는 기능을 제공하며 그 커맨드는 다음과 같다.<br><code>firebase deploy --only function:함수명</code><br>이제 이 <strong>greet</strong>함수를 배포해보자.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ firebase deploy --only <span class="built_in">functions</span>:greet</span><br><span class="line"></span><br><span class="line">=== Deploying to <span class="string">'devson-cloud-functions'</span>...</span><br><span class="line"></span><br><span class="line">i  deploying <span class="built_in">functions</span></span><br><span class="line">i  <span class="built_in">functions</span>: ensuring necessary APIs are enabled...</span><br><span class="line">+  <span class="built_in">functions</span>: all necessary APIs are enabled</span><br><span class="line">i  <span class="built_in">functions</span>: preparing <span class="built_in">functions</span> directory <span class="keyword">for</span> uploading...</span><br><span class="line">i  <span class="built_in">functions</span>: packaged <span class="built_in">functions</span> (22.74 KB) <span class="keyword">for</span> uploading</span><br><span class="line">+  <span class="built_in">functions</span>: <span class="built_in">functions</span> folder uploaded successfully</span><br><span class="line">i  <span class="built_in">functions</span>: current <span class="built_in">functions</span> <span class="keyword">in</span> project: helloWorld(us-central1)</span><br><span class="line">i  <span class="built_in">functions</span>: uploading <span class="built_in">functions</span> <span class="keyword">in</span> project: greet(us-central1)</span><br><span class="line">i  <span class="built_in">functions</span>: creating Node.js 8 <span class="keyword">function</span> greet(us-central1)...</span><br><span class="line">+  <span class="built_in">functions</span>[greet(us-central1)]: Successful create operation. </span><br><span class="line">Function URL (greet): https://us-central1-devson-cloud-functions.cloudfunctions.net/greet  </span><br><span class="line"></span><br><span class="line">+  Deploy complete!</span><br><span class="line"></span><br><span class="line">Project Console: https://console.firebase.google.com/project/devson-cloud-functions/overview</span><br></pre></td></tr></table></figure>
+
+<p>다시 Project Console의 Functions 탭에 들어가면 <code>greet</code> 함수가 추가된 것을 확인할 수 있다.</p>
+<p><img src="/image/etc/firebase/functions/easy-firebase-cloud-functions-2-05.png" alt></p>
+<p>배포된 함수에 요청을 해서 다시 이 함수를 확인해보자.</p>
+<p><img src="/image/etc/firebase/functions/easy-firebase-cloud-functions-2-06.png" alt></p>
+<p>위와 같이 정상 작동을 하는 것을 확인할 수 있다.</p>
+<hr>
+<p>참고<br><a href="https://firebase.google.com/docs/functions/manage-functions?hl=ko" target="_blank" rel="external nofollow noopener noreferrer">https://firebase.google.com/docs/functions/manage-functions?hl=ko</a><br><a href="https://firebase.google.com/docs/cli/?hl=ko#top_of_page" target="_blank" rel="external nofollow noopener noreferrer">https://firebase.google.com/docs/cli/?hl=ko#top_of_page</a></p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" data-id="cjzyxmznk00m539iqr3g2ehmx" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/firebase-cloud-functions-eai-again-01.png)" alt="Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="title">Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류</a></p>
+                            <p class="item-date"><time datetime="2019-08-31T00:30:00.000Z" itemprop="datePublished">2019-08-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="title">쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포</a></p>
+                            <p class="item-date"><time datetime="2019-08-30T12:20:00.000Z" itemprop="datePublished">2019-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-1-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="title">쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성</a></p>
+                            <p class="item-date"><time datetime="2019-08-27T13:00:00.000Z" itemprop="datePublished">2019-08-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/16/etc/vscode/auto-save/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/vscode/auto-save-01.png)" alt="VS Code auto save 기능" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/vscode/">vscode</a></p>
+                            <p class="item-title"><a href="/2019/08/16/etc/vscode/auto-save/" class="title">VS Code auto save 기능</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T05:40:00.000Z" itemprop="datePublished">2019-08-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/14/daily/retrospect/2019-first-half/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn-images-1.medium.com/max/800/1*w9dLy2njrrkNUQVugpF-6g.jpeg)" alt="늦은 2019년 상반기 회고" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/retrospect/">retrospect</a></p>
+                            <p class="item-title"><a href="/2019/08/14/daily/retrospect/2019-first-half/" class="title">늦은 2019년 상반기 회고</a></p>
+                            <p class="item-date"><time datetime="2019-08-14T02:00:00.000Z" itemprop="datePublished">2019-08-14</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">67</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">25</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/jpa/" style="font-size: 13.64px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 16.36px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 15.45px;">algorithm</a> <a href="/tags/bash/" style="font-size: 11.82px;">bash</a> <a href="/tags/basic/" style="font-size: 11.82px;">basic</a> <a href="/tags/book/" style="font-size: 16.36px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.82px;">cloud functions</a> <a href="/tags/db/" style="font-size: 18.18px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/english/" style="font-size: 14.55px;">english</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.82px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.91px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10px;">lambda</a> <a href="/tags/linux/" style="font-size: 13.64px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 10.91px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.91px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/pagination/" style="font-size: 12.73px;">pagination</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 14.55px;">postman</a> <a href="/tags/python/" style="font-size: 11.82px;">python</a> <a href="/tags/redis/" style="font-size: 17.27px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.91px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.91px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.73px;">webrtc</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/회고/" style="font-size: 19.09px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+

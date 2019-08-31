@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>getUserMedia (구버전) | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="webrtc">
+    
+    <meta name="description" content="출처: https://www.html5rocks.com/ko/tutorials/getusermedia/intro/2016년 10월 글이라 현재와는 맞지 않을 수 있지만 getUserMedia의 역사를 알기 위해서 해당 아티클을 정리함  몇 년 동안 캡쳐를 하기 위해서 Flash나 Silverlight 같은 플러그인들을 사용할 수 밖에 없었다.HTML5의 등">
+<meta name="keywords" content="webrtc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="getUserMedia (구버전)">
+<meta property="og:url" content="http://ivvve.github.io/2019/07/29/etc/webrtc/old-getUserMedia/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="출처: https://www.html5rocks.com/ko/tutorials/getusermedia/intro/2016년 10월 글이라 현재와는 맞지 않을 수 있지만 getUserMedia의 역사를 알기 위해서 해당 아티클을 정리함  몇 년 동안 캡쳐를 하기 위해서 Flash나 Silverlight 같은 플러그인들을 사용할 수 밖에 없었다.HTML5의 등">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/etc/webrtc/old-getUserMedia-001.png">
+<meta property="og:updated_time" content="2019-08-31T02:31:35.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="getUserMedia (구버전)">
+<meta name="twitter:description" content="출처: https://www.html5rocks.com/ko/tutorials/getusermedia/intro/2016년 10월 글이라 현재와는 맞지 않을 수 있지만 getUserMedia의 역사를 알기 위해서 해당 아티클을 정리함  몇 년 동안 캡쳐를 하기 위해서 Flash나 Silverlight 같은 플러그인들을 사용할 수 밖에 없었다.HTML5의 등">
+<meta name="twitter:image" content="http://ivvve.github.io/image/etc/webrtc/old-getUserMedia-001.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2019/07/29/etc/webrtc/old-getusermedia/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/etc/webrtc/">webrtc</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-etc/webrtc/old-getUserMedia" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        getUserMedia (구버전)
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/07/29/etc/webrtc/old-getUserMedia/" class="article-date">
+            <time datetime="2019-07-29T11:00:00.000Z" itemprop="datePublished">2019-07-29</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/webrtc/">webrtc</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>출처: <a href="https://www.html5rocks.com/ko/tutorials/getusermedia/intro/" target="_blank" rel="external nofollow noopener noreferrer">https://www.html5rocks.com/ko/tutorials/getusermedia/intro/</a><br>2016년 10월 글이라 현재와는 맞지 않을 수 있지만 getUserMedia의 역사를 알기 위해서 해당 아티클을 정리함</p>
+<hr>
+<p>몇 년 동안 캡쳐를 하기 위해서 Flash나 Silverlight 같은 플러그인들을 사용할 수 밖에 없었다.<br>HTML5의 등장으로 인해 위치정보 (GPS), Orientation API (가속도계), WebGL (GPU), Web Audio API (오디오 장비) 등 하드웨어 장치 접근에 대한 큰 파장을 가지고 왔다.</p>
+<p>여기에서는 사용자의 카메라와 마이크를 웹앱에서 접근할 수 있게 해주는 새로운 API인 navigator.getUserMedia()를 소개한다.</p>
+<h2 id="getUserMedia-로-가는-길"><a href="#getUserMedia-로-가는-길" class="headerlink" title="getUserMedia()로 가는 길"></a>getUserMedia()로 가는 길</h2><p>지난 몇 년 동안 <strong>Media Capture APIs</strong>의 여러 변종들이 발달해왔고<br>많은 사람들이 웹에서 기본 하드웨어 장치에 접근해야 한다는 것을 깨달았지만,<br>그것은 새로운 사양에다 온갖 것을 다 집어 넣는 방향이 되어버렸다.<br>모든 것들이 지저분해져서 결국 W3C가 엄청난 양의 제안들을 통합하고 정리하는 워킹그룹을 만들기로 결정했다.</p>
+<h4 id="Round-1-HTML-Media-Capture"><a href="#Round-1-HTML-Media-Capture" class="headerlink" title="Round 1: HTML Media Capture"></a>Round 1: HTML Media Capture</h4><p>HTML Media Capture는 웹에서의 미디어 캡쳐 표준으로<br><code>&lt;input type=&quot;file&quot;&gt;</code>를 오버로딩하여 accept에 새로운 값을 추가하는 것으로 진행되었다.<br><code>&lt;input type=&quot;file&quot; accept=&quot;image/*;capture=camera&quot;&gt;</code>: 웹캠으로 캡쳐를 하려면, capture=camera을 설정하면 된다.</p>
+<p>비디오 또는 오디오를 녹화하는 것도 비슷하다.<br><code>&lt;input type=&quot;file&quot; accept=&quot;video/*;capture=camcorder&quot;&gt;</code><br><code>&lt;input type=&quot;file&quot; accept=&quot;audio/*;capture=microphone&quot;&gt;</code></p>
+<p>하지만 이 특별한 <strong>API</strong>는 실시간 효과를 처리하기에는 부족했고<br>HTML Media Capture는 단지 미디어 파일을 녹화하거나 그 순간 사진을 찍는 것만 가능하다.</p>
+<h4 id="Round-2-device-element"><a href="#Round-2-device-element" class="headerlink" title="Round 2: device element"></a>Round 2: device element</h4><p>HTML Media Capture에 대한 많은 의견들은 <strong>너무 제한적</strong>이었다는 것이다.<br>그래서 (향후에 나올) 어떤 종류의 기기에서도 지원되는 새로운 스펙이 등장했고,<br>getUserMedia()의 조상이 되는 <code>&lt;device&gt;</code> element라는 형태로 설계된다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">device</span> <span class="attr">type</span>=<span class="string">"media"</span> <span class="attr">onchange</span>=<span class="string">"update(this.data)"</span>&gt;</span><span class="tag">&lt;/<span class="name">device</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">autoplay</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">update</span>(<span class="params">stream</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.querySelector(<span class="string">"video"</span>).src = stream.url;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>하지만 WhatWG는 navigator.getUserMedia()라 부르는 새로운 Javascript API에 대한 찬성으로 <code>&lt;device&gt;</code>를 폐기한다.<br><code>&lt;device&gt;</code>가 비록 없어졌지만 두 가지 위대한 일을 해냈는데:</p>
+<ol>
+<li>의미론적(semantic)이었고,</li>
+<li>단순 오디오/비디오 장비보다 많은 장비들을 지원할 수 있게 쉽게 확장할 수 있었다.</li>
+</ol>
+<h4 id="Round-3-WebRTC"><a href="#Round-3-WebRTC" class="headerlink" title="Round 3: WebRTC"></a>Round 3: WebRTC</h4><p><code>&lt;device&gt;</code>가 결국 없어졌고, WebRTC(Web Real Time Communications) 덕분에 적절한 캡쳐 API를 찾는데 가속이 붙게되었다.<br>getUserMedia()를 통해 사용자의 카메라와 마이크 Stream을 접근할 수 있는 수단을 제공한다.</p>
+<h2 id="시작하기"><a href="#시작하기" class="headerlink" title="시작하기"></a>시작하기</h2><p>navigator.getUserMedia()를 통해 플러그인 없이 웹캠과 마이크 입력을 건드릴 수 있다.<br>카메라 접근은 브라우저 안에 포함되어 있기 때문에 그냥 호출하면된다.</p>
+<h4 id="기능-지원-확인"><a href="#기능-지원-확인" class="headerlink" title="기능 지원 확인"></a>기능 지원 확인</h4><p>기능 지원 확인은 단순히 <code>navigator.getUserMedia</code>가 존재하는지 확인하면 된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasGetUserMedia</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||</span><br><span class="line">            navigator.mozGetUserMedia || navigator.msGetUserMedia);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (hasGetUserMedia()) &#123;</span><br><span class="line">  <span class="comment">// Good to go!</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">'getUserMedia() is not supported in your browser'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/Modernizr/Modernizr" target="_blank" rel="external nofollow noopener noreferrer">Modernizr</a>를 사용하면 브라우저 벤더들의 prefix 차이 문제를 피할 수 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (Modernizr.getusermedia)&#123;</span><br><span class="line">  <span class="keyword">var</span> gUM = Modernizr.prefixed(<span class="string">'getUserMedia'</span>, navigator);</span><br><span class="line">  gUM(&#123;<span class="attr">video</span>: <span class="literal">true</span>&#125;, <span class="function"><span class="keyword">function</span>(<span class="params"> <span class="regexp">//</span>...</span></span></span><br><span class="line"><span class="function"><span class="params">  <span class="regexp">//</span>...</span></span></span><br><span class="line"><span class="function"><span class="params">&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="입력장치의-접근-권한-얻기"><a href="#입력장치의-접근-권한-얻기" class="headerlink" title="입력장치의 접근 권한 얻기"></a>입력장치의 접근 권한 얻기</h4><p>웹캠과 마이크에 접근하기 위해서는 권한을 요청해야 한다.<br>getUserMedia()의 첫번째 인자는 접근하려하는 미디어 별 상세와 요구사항들을 나타내는 객체이다.<br>마이크와 카메라 모두 사용하기 위해서는 {video: true, audio: true}를 전달한다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">autoplay</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> errorCallback = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">"Reeeejected!"</span>, e);</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">    <span class="comment">// Not showing vendor prefixes.</span></span></span><br><span class="line"><span class="javascript">    navigator.getUserMedia(&#123; <span class="attr">video</span>: <span class="literal">true</span>, <span class="attr">audio</span>: <span class="literal">true</span> &#125;, <span class="function"><span class="keyword">function</span>(<span class="params">localMediaStream</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> video = <span class="built_in">document</span>.querySelector(<span class="string">"video"</span>);</span></span><br><span class="line"><span class="javascript">            video.src = <span class="built_in">window</span>.URL.createObjectURL(localMediaStream);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">            <span class="comment">// Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.</span></span></span><br><span class="line"><span class="javascript">            <span class="comment">// See crbug.com/110938.</span></span></span><br><span class="line"><span class="javascript">            video.onloadedmetadata = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="comment">// Ready to go. Do some stuff.</span></span></span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;,</span><br><span class="line">        errorCallback</span><br><span class="line">    );</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>여기에서 <code>&lt;video&gt;</code>요소에 src 속성을 설정하거나 <code>&lt;source&gt;</code> 요소들을 포함하고 있지 않는다.<br>미디어 파일의 비디오 URL을 삽입하는 대신에, 웹캠의 LocalMediaStream에서 얻은 <a href="https://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers-bloburis" target="_blank" rel="external nofollow noopener noreferrer">Blob URL</a>을 삽입한다.</p>
+<h4 id="미디어-제약조건-설정하기-해상도-높이-너비"><a href="#미디어-제약조건-설정하기-해상도-높이-너비" class="headerlink" title="미디어 제약조건 설정하기 (해상도, 높이, 너비)"></a>미디어 제약조건 설정하기 (해상도, 높이, 너비)</h4><p>getUserMedia()의 첫번째 인자는 얻게될 미디어 스트림에 대해 더 많은 요구사항들(또는 제약조건들)을 표시할 수 있다.<br>예를 들어, 기본적인 비디오 접근 대신에 다음과 같이 HD 화질의 스트림을 추가적으로 요청할 수 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hdConstraints = &#123;</span><br><span class="line">  video: &#123;</span><br><span class="line">    mandatory: &#123;</span><br><span class="line">      minWidth: <span class="number">1280</span>,</span><br><span class="line">      minHeight: <span class="number">720</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">navigator.getUserMedia(hdConstraints, successCallback, errorCallback);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> vgaConstraints = &#123;</span><br><span class="line">  video: &#123;</span><br><span class="line">    mandatory: &#123;</span><br><span class="line">      maxWidth: <span class="number">640</span>,</span><br><span class="line">      maxHeight: <span class="number">360</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">navigator.getUserMedia(vgaConstraints, successCallback, errorCallback);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Web-Audio-API와-함께-getUserMedia-사용하기"><a href="#Web-Audio-API와-함께-getUserMedia-사용하기" class="headerlink" title="Web Audio API와 함께 getUserMedia 사용하기"></a>Web Audio API와 함께 getUserMedia 사용하기</h4><p>크롬은 getUserMedia()에서 실시간 효과들을 위한 Web Audio API로 실시간 마이크 입력을 지원한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.AudioContext = <span class="built_in">window</span>.AudioContext || <span class="built_in">window</span>.webkitAudioContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> context = <span class="keyword">new</span> AudioContext();</span><br><span class="line"></span><br><span class="line">navigator.getUserMedia(&#123; <span class="attr">audio</span>: <span class="literal">true</span> &#125;, <span class="function"><span class="keyword">function</span>(<span class="params">stream</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> microphone = context.createMediaStreamSource(stream);</span><br><span class="line">        <span class="keyword">var</span> filter = context.createBiquadFilter();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// microphone -&gt; filter -&gt; destination.</span></span><br><span class="line">        microphone.connect(filter);</span><br><span class="line">        filter.connect(context.destination);</span><br><span class="line">    &#125;,</span><br><span class="line">    errorCallback</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="미디어-소스-선택하기"><a href="#미디어-소스-선택하기" class="headerlink" title="미디어 소스 선택하기"></a>미디어 소스 선택하기</h4><p>Chrome 30이후 버전에서, getUserMedia()는 비디오와 오디오 소스를 선택할 수 있는 MediaStreamTrack.getSources() API를 지원</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">MediaStreamTrack.getSources(<span class="function"><span class="keyword">function</span>(<span class="params">sourceInfos</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> audioSource = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">var</span> videoSource = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i != sourceInfos.length; ++i) &#123;</span><br><span class="line">    <span class="keyword">var</span> sourceInfo = sourceInfos[i];</span><br><span class="line">    <span class="keyword">if</span> (sourceInfo.kind === <span class="string">'audio'</span>) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(sourceInfo.id, sourceInfo.label || <span class="string">'microphone'</span>);</span><br><span class="line"></span><br><span class="line">      audioSource = sourceInfo.id;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sourceInfo.kind === <span class="string">'video'</span>) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(sourceInfo.id, sourceInfo.label || <span class="string">'camera'</span>);</span><br><span class="line"></span><br><span class="line">      videoSource = sourceInfo.id;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Some other kind of source: '</span>, sourceInfo);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  sourceSelected(audioSource, videoSource);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sourceSelected</span>(<span class="params">audioSource, videoSource</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> constraints = &#123;</span><br><span class="line">    audio: &#123;</span><br><span class="line">      optional: [&#123;<span class="attr">sourceId</span>: audioSource&#125;]</span><br><span class="line">    &#125;,</span><br><span class="line">    video: &#123;</span><br><span class="line">      optional: [&#123;<span class="attr">sourceId</span>: videoSource&#125;]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  navigator.getUserMedia(constraints, successCallback, errorCallback);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.html5rocks.com/ko/tutorials/getusermedia/intro/" target="_blank" rel="external nofollow noopener noreferrer">Sam Dutton의 데모</a></p>
+<h4 id="보안"><a href="#보안" class="headerlink" title="보안"></a>보안</h4><p>일부 브라우저는 getUserMedia()를 호출시에 카메라와 마이크에 대한 접근을 허용 또는 거부할지에 대한 의견을 물어보는 상태바를 표시한다.</p>
+<p><img src="/image/etc/webrtc/old-getUserMedia-001.png" alt></p>
+<p>앱이 SSL(https://) 상에서 동작중이라면, 권한은 지속된다.. </p>
+<h4 id="대체물-제공"><a href="#대체물-제공" class="headerlink" title="대체물 제공"></a>대체물 제공</h4><p>API가 지원되지 않을때 또는 특정한 이유로 호출이 실패하였을때 이미 저장된 비디오 파일로 대체하는 방법</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Not showing vendor prefixes or code that works cross-browser:</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fallback</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  video.src = <span class="string">'fallbackvideo.webm'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">success</span>(<span class="params">stream</span>) </span>&#123;</span><br><span class="line">  video.src = <span class="built_in">window</span>.URL.createObjectURL(stream);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!navigator.getUserMedia) &#123;</span><br><span class="line">  fallback(); <span class="comment">// getUserMedia API를 지원하지 않을 때</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  navigator.getUserMedia(&#123;<span class="attr">video</span>: <span class="literal">true</span>&#125;, success, fallback);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="사진-찍기"><a href="#사진-찍기" class="headerlink" title="사진 찍기"></a>사진 찍기</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">autoplay</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">""</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">style</span>=<span class="string">"display:none;"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> video = <span class="built_in">document</span>.querySelector(<span class="string">'video'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> canvas = <span class="built_in">document</span>.querySelector(<span class="string">'canvas'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> ctx = canvas.getContext(<span class="string">'2d'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> localMediaStream = <span class="literal">null</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">snapshot</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">if</span> (localMediaStream) &#123;</span></span><br><span class="line">      ctx.drawImage(video, 0, 0);</span><br><span class="line"><span class="javascript">      <span class="comment">// "image/webp" works in Chrome.</span></span></span><br><span class="line"><span class="javascript">      <span class="comment">// Other browsers will fall back to image/png.</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">document</span>.querySelector(<span class="string">'img'</span>).src = canvas.toDataURL(<span class="string">'image/webp'</span>);</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="comment">// snapshot 찍기 이벤트리스너 추가</span></span></span><br><span class="line"><span class="javascript">  video.addEventListener(<span class="string">'click'</span>, snapshot, <span class="literal">false</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="comment">// Not showing vendor prefixes or code that works cross-browser.</span></span></span><br><span class="line"><span class="javascript">  <span class="comment">// 비디오 동작</span></span></span><br><span class="line"><span class="javascript">  navigator.getUserMedia(&#123;<span class="attr">video</span>: <span class="literal">true</span>&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">stream</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    video.src = <span class="built_in">window</span>.URL.createObjectURL(stream);</span></span><br><span class="line">    localMediaStream = stream;</span><br><span class="line">  &#125;, errorCallback);</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Applying-Effects"><a href="#Applying-Effects" class="headerlink" title="Applying Effects"></a>Applying Effects</h4><ul>
+<li>CSS Filters</li>
+</ul>
+<p>CSS Filters를 사용해서 <code>&lt;video&gt;</code>에 여러가지 효과들을 적용할 수 있다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line">video &#123;</span><br><span class="line">  width: 307px;</span><br><span class="line">  height: 250px;</span><br><span class="line">  background: rgba(255,255,255,0.5);</span><br><span class="line">  border: 1px solid #ccc;</span><br><span class="line">&#125;</span><br><span class="line">.grayscale &#123;</span><br><span class="line">  +filter: grayscale(1);</span><br><span class="line">&#125;</span><br><span class="line">.sepia &#123;</span><br><span class="line">  +filter: sepia(1);</span><br><span class="line">&#125;</span><br><span class="line">.blur &#123;</span><br><span class="line">  +filter: blur(3px);</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">autoplay</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> idx = <span class="number">0</span>;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> filters = [<span class="string">'grayscale'</span>, <span class="string">'sepia'</span>, <span class="string">'blur'</span>, <span class="string">'brightness'</span>,</span></span><br><span class="line"><span class="javascript">               <span class="string">'contrast'</span>, <span class="string">'hue-rotate'</span>, <span class="string">'hue-rotate2'</span>,</span></span><br><span class="line"><span class="javascript">               <span class="string">'hue-rotate3'</span>, <span class="string">'saturate'</span>, <span class="string">'invert'</span>, <span class="string">''</span>];</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">changeFilter</span>(<span class="params">e</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> el = e.target;</span></span><br><span class="line"><span class="javascript">  el.className = <span class="string">''</span>;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> effect = filters[idx++ % filters.length]; <span class="comment">// loop through filters.</span></span></span><br><span class="line"><span class="javascript">  <span class="keyword">if</span> (effect) &#123;</span></span><br><span class="line">    el.classList.add(effect);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.querySelector(<span class="string">'video'</span>).addEventListener(<span class="string">'click'</span>, changeFilter, <span class="literal">false</span>);</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Web-Audio-API와-함께-getUserMedia-사용하기-1"><a href="#Web-Audio-API와-함께-getUserMedia-사용하기-1" class="headerlink" title="Web Audio API와 함께 getUserMedia 사용하기"></a>Web Audio API와 함께 getUserMedia 사용하기</h4><p>크롬은 getUserMedia()에서 실시간 효과들을 위한 Web Audio API로 실시간 마이크 입력을 지원한다.<br>마이크 입력에서 Web Audio API로 연결하는 방법은 다음과 같다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.AudioContext = <span class="built_in">window</span>.AudioContext ||</span><br><span class="line">                      <span class="built_in">window</span>.webkitAudioContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> context = <span class="keyword">new</span> AudioContext();</span><br><span class="line"></span><br><span class="line">navigator.getUserMedia(&#123;<span class="attr">audio</span>: <span class="literal">true</span>&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">stream</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> microphone = context.createMediaStreamSource(stream);</span><br><span class="line">  <span class="keyword">var</span> filter = context.createBiquadFilter();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// microphone -&gt; filter -&gt; destination.</span></span><br><span class="line">  microphone.connect(filter);</span><br><span class="line">  filter.connect(context.destination);</span><br><span class="line">&#125;, errorCallback);</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2019/07/29/etc/webrtc/old-getUserMedia/" data-id="cjzyxmzn500k339iq8tc0o30m" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/07/29/daily/retrospect/20190729-0804/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            7월 29 - 8월 4 회고
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/07/28/daily/retrospect/201907-22-28/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">7월 22-28 회고</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/firebase-cloud-functions-eai-again-01.png)" alt="Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/31/etc/firebase/functions/firebase-cloud-functions-eai-again/" class="title">Firebase Cloud Funtions 사용 시 EAI_AGAIN 오류</a></p>
+                            <p class="item-date"><time datetime="2019-08-31T00:30:00.000Z" itemprop="datePublished">2019-08-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-2-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/30/etc/firebase/functions/easy-firebase-cloud-functions-2/" class="title">쉽게 따라하는 Firebase Cloud Functions - 2. 함수 배포</a></p>
+                            <p class="item-date"><time datetime="2019-08-30T12:20:00.000Z" itemprop="datePublished">2019-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/firebase/functions/easy-firebase-cloud-functions-1-01.png)" alt="쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/firebase/">firebase</a></p>
+                            <p class="item-title"><a href="/2019/08/27/etc/firebase/functions/easy-firebase-cloud-functions-1/" class="title">쉽게 따라하는 Firebase Cloud Functions - 1. 프로젝트 생성</a></p>
+                            <p class="item-date"><time datetime="2019-08-27T13:00:00.000Z" itemprop="datePublished">2019-08-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/16/etc/vscode/auto-save/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/vscode/auto-save-01.png)" alt="VS Code auto save 기능" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/vscode/">vscode</a></p>
+                            <p class="item-title"><a href="/2019/08/16/etc/vscode/auto-save/" class="title">VS Code auto save 기능</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T05:40:00.000Z" itemprop="datePublished">2019-08-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/14/daily/retrospect/2019-first-half/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn-images-1.medium.com/max/800/1*w9dLy2njrrkNUQVugpF-6g.jpeg)" alt="늦은 2019년 상반기 회고" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/retrospect/">retrospect</a></p>
+                            <p class="item-title"><a href="/2019/08/14/daily/retrospect/2019-first-half/" class="title">늦은 2019년 상반기 회고</a></p>
+                            <p class="item-date"><time datetime="2019-08-14T02:00:00.000Z" itemprop="datePublished">2019-08-14</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">67</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">25</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/jpa/" style="font-size: 13.64px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 16.36px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 15.45px;">algorithm</a> <a href="/tags/bash/" style="font-size: 11.82px;">bash</a> <a href="/tags/basic/" style="font-size: 11.82px;">basic</a> <a href="/tags/book/" style="font-size: 16.36px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.82px;">cloud functions</a> <a href="/tags/db/" style="font-size: 18.18px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/english/" style="font-size: 14.55px;">english</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.82px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.91px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10px;">lambda</a> <a href="/tags/linux/" style="font-size: 13.64px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 10.91px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.91px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/pagination/" style="font-size: 12.73px;">pagination</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 14.55px;">postman</a> <a href="/tags/python/" style="font-size: 11.82px;">python</a> <a href="/tags/redis/" style="font-size: 17.27px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.91px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.91px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.73px;">webrtc</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/회고/" style="font-size: 19.09px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2019/07/29/etc/webrtc/old-getUserMedia/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+
