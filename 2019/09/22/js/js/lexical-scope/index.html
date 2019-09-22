@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>Lexical Scope in Javascript | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="scope,javascript,lexical scope">
+    
+    <meta name="description" content="Node.js 디자인 패턴 책을 공부하면서 Lexical Scope에 대한 언급이 있어 정리하고자 한다. Lexical Scope는 스코프가 코드가 작성된 때에 적용이 되는 것이다.Static Scope (정적 스코프) 라고도 한다. (개인적으로 lexical이라는 단어 때문에 더 헷갈리는게 아닐까싶다)Dynamic Scope는 코드가 작성될 때가 아닌 코">
+<meta name="keywords" content="scope,javascript,lexical scope">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lexical Scope in Javascript">
+<meta property="og:url" content="http://ivvve.github.io/2019/09/22/js/js/lexical-scope/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="Node.js 디자인 패턴 책을 공부하면서 Lexical Scope에 대한 언급이 있어 정리하고자 한다. Lexical Scope는 스코프가 코드가 작성된 때에 적용이 되는 것이다.Static Scope (정적 스코프) 라고도 한다. (개인적으로 lexical이라는 단어 때문에 더 헷갈리는게 아닐까싶다)Dynamic Scope는 코드가 작성될 때가 아닌 코">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/js/js/lexical-scope-01.png">
+<meta property="og:updated_time" content="2019-09-22T04:06:51.316Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lexical Scope in Javascript">
+<meta name="twitter:description" content="Node.js 디자인 패턴 책을 공부하면서 Lexical Scope에 대한 언급이 있어 정리하고자 한다. Lexical Scope는 스코프가 코드가 작성된 때에 적용이 되는 것이다.Static Scope (정적 스코프) 라고도 한다. (개인적으로 lexical이라는 단어 때문에 더 헷갈리는게 아닐까싶다)Dynamic Scope는 코드가 작성될 때가 아닌 코">
+<meta name="twitter:image" content="http://ivvve.github.io/image/js/js/lexical-scope-01.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2019/09/22/js/js/lexical-scope/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/intellij/">intellij</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/">js</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/js/">js</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/js/">js</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/js/js/">js</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-js/js/lexical-scope" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Lexical Scope in Javascript
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/09/22/js/js/lexical-scope/" class="article-date">
+            <time datetime="2019-09-22T04:00:00.000Z" itemprop="datePublished">2019-09-22</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/javascript/">javascript</a>, <a class="tag-link" href="/tags/lexical-scope/">lexical scope</a>, <a class="tag-link" href="/tags/scope/">scope</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p><a href="http://www.yes24.com/Product/Goods/65050060?Acode=101" rel="external nofollow noopener noreferrer" target="_blank">Node.js 디자인 패턴</a> 책을 공부하면서 Lexical Scope에 대한 언급이 있어 정리하고자 한다.</p>
+<p><code>Lexical Scope</code>는 스코프가 코드가 작성된 때에 적용이 되는 것이다.<br><code>Static Scope (정적 스코프)</code> 라고도 한다. (개인적으로 lexical이라는 단어 때문에 더 헷갈리는게 아닐까싶다)<br><code>Dynamic Scope</code>는 코드가 작성될 때가 아닌 코드를 실행하면서(런타임 시에) 스코프가 정해지는 것을 의미한다.</p>
+<p>개인적으로 단어로만 이해하기 애매해서 코드를 통해 Lexical Scope를 알아보자.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">'original'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str = <span class="string">'new'</span>;</span><br><span class="line">    inner();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(str);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">outer(); <span class="comment">// original</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>outer</strong> 함수를 호출하면 <strong>outer</strong> 함수에서 할당한 <strong>new</strong>가 아니라 <strong>original</strong>이 출력된다.<br>(물론 <strong>outer</strong> 함수에서 <code>var</code>를 없애면 <strong>str</strong> 변수에 값이 새로 할당되서 <strong>new</strong>가 출력된다.)</p>
+<p><strong>original</strong>이 출력되는 이유는 <strong>inner</strong> 함수를 작성할 때의 <strong>str</strong> 변수는 <strong>original</strong>로 선언한 <strong>str</strong> 변수를 바라보고 있기 때문이다.<br>그렇기 때문에 런타임시에 <strong>inner</strong> 함수는 <strong>outer</strong> 함수 내에서 실행되지만,<br><code>Lexical Scope</code>로 인해 <strong>inner</strong> 함수의 스코프가 <strong>outer</strong> 함수에 종속되지 않기 때문에 <strong>original</strong>이 출력된 것이다.</p>
+<p>(<code>Perl</code>과 같은 언어에서는 <a href="https://gist.github.com/DmitrySoshnikov/674782" rel="external nofollow noopener noreferrer" target="_blank">Dynamic Scope</a>를 사용할 수 있다)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">'original'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str = <span class="string">'new'</span>;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(str);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(str);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">outer(); <span class="comment">// new</span></span><br></pre></td></tr></table></figure>
+
+<p>이 코드는 <strong>outer</strong> 함수 내부에 있는 함수는 코드 작성 시 <strong>outer</strong> 함수 내부의 <strong>var str = ‘new’;</strong>를 바라보고 있기 때문에 <strong>new</strong>를 출력한다.</p>
+<p>표현하자면 이런 식으로 나타낼 수 있을 것이다.</p>
+<p><img src="/image/js/js/lexical-scope-01.png" alt></p>
+<hr>
+<p>그럼 이것을 왜 알아야 하면 Arrow function의 동작에 대해 어느정도 도움이 되기 때문이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`Hello I'm <span class="subst">$&#123;<span class="keyword">this</span>.name&#125;</span>`</span>);</span><br><span class="line">    &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devson = <span class="keyword">new</span> Person(<span class="string">'devson'</span>);</span><br><span class="line">devson.say(); <span class="comment">// Hello I'm undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>앞서 설명을 어느정도 이해했다면 왜 <code>setTimeout</code> 내부의 <code>this.name</code>이 <strong>undefined</strong>가 인지 감이 올 수 있을 것이다.<br><code>setTimeout</code>은 <strong>Person.say</strong> 함수와는 별개의 Scope를 가지고 있기 때문에 this가 Person을 바라보고 있는 것이 아니라,<br>브라우저라면 <strong>window</strong>, Node.js라면 <strong>global</strong>을 바라보고 있다.</p>
+<p>이 <strong>this</strong>를 <strong>Person</strong>으로 정하고자 할 때는 <code>bind</code>를 써서 아래와 같이 binding 할 수도 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    setTimeout((<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`Hello I'm <span class="subst">$&#123;<span class="keyword">this</span>.name&#125;</span>`</span>);</span><br><span class="line">    &#125;).bind(<span class="keyword">this</span>), <span class="number">200</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devson = <span class="keyword">new</span> Person(<span class="string">'devson'</span>);</span><br><span class="line">devson.say(); <span class="comment">// Hello I'm devson</span></span><br></pre></td></tr></table></figure>
+
+<p>여기서 setTimeout에서 callback 함수를 Arrow function으로 사용하면 어떻게 될까?</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`Hello I'm <span class="subst">$&#123;<span class="keyword">this</span>.name&#125;</span>`</span>);</span><br><span class="line">    &#125;, <span class="number">100</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devson = <span class="keyword">new</span> Person(<span class="string">'devson'</span>);</span><br><span class="line">devson.say(); <span class="comment">// Hello I'm devson</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>function() {…}</strong> 을 사용했을 때는 <strong>undefined</strong>가 나오더니 지금은 <strong>Person.name</strong>이 출력됐다.<br>그 이유는 Arrow function의 경우 Person의 <code>Lexical Scope</code>가 binding 되기 때문이다.</p>
+<hr>
+<p>Javascript는 <code>this</code>가 Java 복잡하기 때문에 Lexical Scope에 대한 이해가 필요한 것 같다.</p>
+<p>참고:<br>TOAST Scope &amp; Closure: <a href="https://meetup.toast.com/posts/86" rel="external nofollow noopener noreferrer" target="_blank">https://meetup.toast.com/posts/86</a><br>MDN Arrow Function (kor): <a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/%EC%95%A0%EB%A1%9C%EC%9A%B0_%ED%8E%91%EC%85%98#%EB%B0%94%EC%9D%B8%EB%94%A9_%EB%90%98%EC%A7%80_%EC%95%8A%EC%9D%80_this" rel="external nofollow noopener noreferrer" target="_blank">https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/%EC%95%A0%EB%A1%9C%EC%9A%B0_%ED%8E%91%EC%85%98#%EB%B0%94%EC%9D%B8%EB%94%A9_%EB%90%98%EC%A7%80_%EC%95%8A%EC%9D%80_this</a></p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2019/09/22/js/js/lexical-scope/" data-id="ck0ugf6qa000nioiqc3hiuzar" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-3-navigating-tabs/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title"></p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/22/js/js/lexical-scope/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/js/js/lexical-scope-01.png)" alt="Lexical Scope in Javascript" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/js/">js</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/js/js/">js</a></p>
+                            <p class="item-title"><a href="/2019/09/22/js/js/lexical-scope/" class="title">Lexical Scope in Javascript</a></p>
+                            <p class="item-date"><time datetime="2019-09-22T04:00:00.000Z" itemprop="datePublished">2019-09-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-3-navigating-tabs/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-3-navigating-tabs/" class="title"></a></p>
+                            <p class="item-date"><time datetime="2019-09-15T05:31:14.922Z" itemprop="datePublished">2019-09-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-2-other-features/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/intellij/learn-itellij-ide-features-2-other-features-01.png)" alt="Learn IntellJ IDE Features - 2. Refactoring, Code Assitance &amp; Navigation" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/intellij/">intellij</a></p>
+                            <p class="item-title"><a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-2-other-features/" class="title">Learn IntellJ IDE Features - 2. Refactoring, Code Assitance &amp; Navigation</a></p>
+                            <p class="item-date"><time datetime="2019-09-15T05:00:00.000Z" itemprop="datePublished">2019-09-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-1-basics/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/intellij/learn-itellij-ide-features-1-basics-01.png)" alt="Learn IntellJ IDE Features - 1. Basics" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/etc/intellij/">intellij</a></p>
+                            <p class="item-title"><a href="/2019/09/15/etc/intellij/learn-itellij-ide-features-1-basics/" class="title">Learn IntellJ IDE Features - 1. Basics</a></p>
+                            <p class="item-date"><time datetime="2019-09-15T04:00:00.000Z" itemprop="datePublished">2019-09-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/01/daily/retrospect/201909/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/retrospect/">retrospect</a></p>
+                            <p class="item-title"><a href="/2019/09/01/daily/retrospect/201909/" class="title">2019년 9월 회고</a></p>
+                            <p class="item-date"><time datetime="2019-09-01T13:30:00.000Z" itemprop="datePublished">2019-09-01</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">70</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">10</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">21</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/intellij/">intellij</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/">js</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/js/js/">js</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intellij/">IntelliJ</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lexical-scope/">lexical scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/">scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">26</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/intellij/" style="font-size: 10.83px;">IntelliJ</a> <a href="/tags/jpa/" style="font-size: 13.33px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 16.67px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 15.83px;">algorithm</a> <a href="/tags/bash/" style="font-size: 11.67px;">bash</a> <a href="/tags/basic/" style="font-size: 11.67px;">basic</a> <a href="/tags/book/" style="font-size: 16.67px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.67px;">cloud functions</a> <a href="/tags/db/" style="font-size: 18.33px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/english/" style="font-size: 15px;">english</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.67px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.83px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10px;">lambda</a> <a href="/tags/lexical-scope/" style="font-size: 10px;">lexical scope</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 10.83px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.83px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/pagination/" style="font-size: 12.5px;">pagination</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 14.17px;">postman</a> <a href="/tags/python/" style="font-size: 11.67px;">python</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.83px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.83px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.5px;">webrtc</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/회고/" style="font-size: 19.17px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2019/09/22/js/js/lexical-scope/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+
