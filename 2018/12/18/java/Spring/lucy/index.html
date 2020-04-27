@@ -25,7 +25,7 @@
 <meta property="og:description" content="XSS(Cross Site Scripting)을 막기위해 네이버에서 lucy-xss-servlet-filter를 개발했다. (그 전에 lucy-xss-filter가 있었다.) lucy-xss-servlet-filter는 Servlet filter 기반의 라이브러리로 XSS를 쉽고 효과적으로 방어할 수 있게 해준다.공식 github 에는 다음과 같이 설명하고">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://ivvve.github.io/image/java/Spring/lucy1.png">
-<meta property="og:updated_time" content="2019-08-31T02:31:35.101Z">
+<meta property="og:updated_time" content="2020-04-27T03:02:53.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringBoot 2.0.x에 lucy-xss-servlet-filter 적용하기">
 <meta name="twitter:description" content="XSS(Cross Site Scripting)을 막기위해 네이버에서 lucy-xss-servlet-filter를 개발했다. (그 전에 lucy-xss-filter가 있었다.) lucy-xss-servlet-filter는 Servlet filter 기반의 라이브러리로 XSS를 쉽고 효과적으로 방어할 수 있게 해준다.공식 github 에는 다음과 같이 설명하고">
@@ -229,7 +229,7 @@
 <p><a href="https://github.com/naver/lucy-xss-servlet-filter/issues/10" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/naver/lucy-xss-servlet-filter/issues/10</a></p>
 <p><img src="/image/java/Spring/lucy5.png" alt></p>
 <p>@RequestBody로 받아오는 즉, application/json 요청은 filtering 되지 않기때문에 이 경우 XSS 공격의 취약해진다.<br>(처음엔 적용이 안된 줄 알고 1시간 동안 다시 설정하고 확인하고를 반복했다…)</p>
-<p>이러한 문제점(?)을 해결하기 위해 여러 방법이 있겠지만 나는 직접 doFilter 메서드를 호출하는 방식으로 XSS가 가능한 dirty값을 clean값으로 변경했다. </p>
+<p>이러한 문제점(?)을 해결하기 위해 여러 방법이 있겠지만 나는 직접 doFilter 메서드를 호출하는 방식으로 XSS가 가능한 dirty값을 clean값으로 변경했다.<br>(해당 코드는 <a href="https://github.com/ivvve/lucy-test/blob/master/src/test/java/com/example/demo/LucyTest.java" rel="external nofollow noopener noreferrer" target="_blank">여기</a>에서 확인 가능)</p>
 <p>다른 방법으로는 MessageConverter를 사용하는 방식이 있는데 이는 <a href="http://homoefficio.github.io/2016/11/21/Spring%EC%97%90%EC%84%9C-JSON%EC%97%90-XSS-%EB%B0%A9%EC%A7%80-%EC%B2%98%EB%A6%AC-%ED%95%98%EA%B8%B0/" rel="external nofollow noopener noreferrer" target="_blank">여기서</a> 확인하는게 좋을 것 같다.</p>
 <hr>
 <p>추가로 lucy-xss-filter와 luxy-xss-servlet-filter 대해 짧게 언급하겠다.</p>
