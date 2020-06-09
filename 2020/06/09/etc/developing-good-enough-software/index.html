@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>적당히 괜찮은 소프트웨어 개발하기 | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="good enough software,pragmatic programmer,실용주의 프로그래머">
+    
+    <meta name="description" content="사내 스터디 발표를 위해 준비한 자료를 블로그에 올려놓습니다. SlideShare: https://www.slideshare.net/YoungCheolSon/developing-good-enough-software   .width150px {   width: 150px; } .width250px {   width: 250px; }   적당히 괜찮은 소프트웨">
+<meta name="keywords" content="good enough software,pragmatic programmer,실용주의 프로그래머">
+<meta property="og:type" content="article">
+<meta property="og:title" content="적당히 괜찮은 소프트웨어 개발하기">
+<meta property="og:url" content="http://ivvve.github.io/2020/06/09/etc/developing-good-enough-software/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="사내 스터디 발표를 위해 준비한 자료를 블로그에 올려놓습니다. SlideShare: https://www.slideshare.net/YoungCheolSon/developing-good-enough-software   .width150px {   width: 150px; } .width250px {   width: 250px; }   적당히 괜찮은 소프트웨">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/etc/developing-good-enough-software-01.png">
+<meta property="og:updated_time" content="2020-06-09T13:53:36.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="적당히 괜찮은 소프트웨어 개발하기">
+<meta name="twitter:description" content="사내 스터디 발표를 위해 준비한 자료를 블로그에 올려놓습니다. SlideShare: https://www.slideshare.net/YoungCheolSon/developing-good-enough-software   .width150px {   width: 150px; } .width250px {   width: 250px; }   적당히 괜찮은 소프트웨">
+<meta name="twitter:image" content="http://ivvve.github.io/image/etc/developing-good-enough-software-01.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2020/06/09/etc/developing-good-enough-software/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/aws/">aws</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/intellij/">intellij</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/">go</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/basics/">basics</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/">js</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/nest-js/">Nest.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/js/">js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/ts/">ts</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/etc/">etc</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-etc/developing-good-enough-software" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        적당히 괜찮은 소프트웨어 개발하기
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/06/09/etc/developing-good-enough-software/" class="article-date">
+            <time datetime="2020-06-09T14:30:00.000Z" itemprop="datePublished">2020-06-09</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/good-enough-software/">good enough software</a>, <a class="tag-link" href="/tags/pragmatic-programmer/">pragmatic programmer</a>, <a class="tag-link" href="/tags/실용주의-프로그래머/">실용주의 프로그래머</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>사내 스터디 발표를 위해 준비한 자료를 블로그에 올려놓습니다.</p>
+<p>SlideShare: <a href="https://www.slideshare.net/YoungCheolSon/developing-good-enough-software" rel="external nofollow noopener noreferrer" target="_blank">https://www.slideshare.net/YoungCheolSon/developing-good-enough-software</a></p>
+<hr>
+<style>
+.width150px {
+  width: 150px;
+}
+.width250px {
+  width: 250px;
+}
+</style>
+
+<h1 id="적당히-괜찮은-소프트웨어-개발하기"><a href="#적당히-괜찮은-소프트웨어-개발하기" class="headerlink" title="적당히 괜찮은 소프트웨어 개발하기"></a>적당히 괜찮은 소프트웨어 개발하기</h1><p>Developing <code>good enough</code> software</p>
+<h2 id="Inspiration"><a href="#Inspiration" class="headerlink" title="Inspiration"></a>Inspiration</h2><h3 id="실용주의-프로그래머-4장-적당히-괜찮은-소프트웨어"><a href="#실용주의-프로그래머-4장-적당히-괜찮은-소프트웨어" class="headerlink" title="실용주의 프로그래머: 4장 적당히 괜찮은 소프트웨어"></a><strong>실용주의 프로그래머</strong>: 4장 적당히 괜찮은 소프트웨어</h3><img class="left_img width250px" src="/image/etc/developing-good-enough-software-01.png">
+
+<h3 id="스타트업은-처음이라-😇"><a href="#스타트업은-처음이라-😇" class="headerlink" title="스타트업은 처음이라 😇"></a><strong>스타트업은 처음이라 😇</strong></h3><p>이전 SI 회사에서 팀이 개발 방향에 대한 고민없이 공장에서 물건을 찍어내듯 기능을 구현하고 당장 기능 구현, 버그 처리에 급급한 환경에서 일하다보니 기능 구현도 중요하나 이를 구현하는 방향에 대해서도 고민을 많이 하게 되었다. 하지만 절대적인 경험, 경력이 적다보니 고민의 시간이 길어지고 그러다 보니 기능 구현이 생각한 것 이상으로 시간이 더 걸리게 되었다.</p>
+<p>서비스 기업으로써 새로운 기능을 빠르게 시장에 내놓는것이 시장을 리딩하는데 있어 중요한 요소이나 주니어 개발자로서 <strong>개발 속도 ⇔ 코드 퀄리티</strong> 딜레마가 있다.</p>
+<h2 id="적당히-괜찮은-소프트웨어"><a href="#적당히-괜찮은-소프트웨어" class="headerlink" title="적당히 괜찮은 소프트웨어"></a>적당히 괜찮은 소프트웨어</h2><blockquote>
+<p>우리는 종종 뭔가 나아지게 하려다가 괜찮은 것마저 망친다.<br>– 리어왕 1.4</p>
+</blockquote>
+<h3 id="적당히-괜찮은-것은-어떤-것인가"><a href="#적당히-괜찮은-것은-어떤-것인가" class="headerlink" title="적당히 괜찮은 것은 어떤 것인가?"></a>적당히 괜찮은 것은 어떤 것인가?</h3><p><img src="/image/etc/developing-good-enough-software-02.png" alt></p>
+<p>(from Naver dictionary)</p>
+<blockquote>
+<p>적당히 괜찮은이라는 문구는 너절하거나 형편없는 코드를 의미하지 않는다.<br>시스템이 성공하려면 사용자의 요구사항을 충족해야 한다.</p>
+<ul>
+<li>실용주의 프로그래머</li>
+</ul>
+</blockquote>
+<p><code>**적당히**</code>라는 단어가 줄 수 있는 부정적인 어감이 적당히 괜찮은 소프트웨어가 단지 적당히 만들어낸 결과물이라고 생각 할 수 있다. </p>
+<p>하지만 <strong><code>적당히 괜찮은</code></strong>이라는 문구는 너절하거나 형편없는 코드를 의미하지 않는다.<br><strong>사용자의 요구사항</strong>을 충족하는 어느정도 정돈되고 잘 동작하는 소프트웨어를 말한다.</p>
+<h3 id="적당함은-왜-필요한가"><a href="#적당함은-왜-필요한가" class="headerlink" title="적당함은 왜 필요한가?"></a>적당함은 왜 필요한가?</h3><img class="left_img width150px" src="/image/etc/developing-good-enough-software-03.png">
+
+<h4 id="완벽은-불가능하다"><a href="#완벽은-불가능하다" class="headerlink" title="완벽은 불가능하다"></a>완벽은 불가능하다</h4><blockquote>
+<p>“Give them the third best to go on with; the second best comes too late,<br><strong>the best never comes</strong>.” (by Robert Watson-Watt)</p>
+</blockquote>
+<p>이미 괜찮은 프로그램을 과도하게 장식하거나 지나칠 정도로 다듬느라 망치지 말라.</p>
+<p>완벽하지 않을 수도 있다. 걱정하지 마라. 완벽해지기란 <strong>불가능</strong>하다.</p>
+<ul>
+<li>(유머로 보는) 과도하게 포장된 소프트웨어의 예: <a href="https://github.com/EnterpriseQualityCoding/FizzBuzzEnterpriseEdition" rel="external nofollow noopener noreferrer" target="_blank">Fizz Buzz Enterprise Edition</a></li>
+</ul>
+<p>이미 범용적으로 사용되고 판매되는 소프트웨어들도 결함이 있다.</p>
+<ul>
+<li><a href="https://github.com/spring-projects/spring-framework/issues" rel="external nofollow noopener noreferrer" target="_blank"><strong>Spring Framework issues</strong></a></li>
+</ul>
+<p><img src="/image/etc/developing-good-enough-software-04.png" alt></p>
+<ul>
+<li><a href="https://github.com/line/armeria/issues" rel="external nofollow noopener noreferrer" target="_blank"><strong>Line armeria issues</strong></a></li>
+</ul>
+<p><img src="/image/etc/developing-good-enough-software-05.png" alt></p>
+<ul>
+<li><a href="https://www.microsoft.com/en-us/msrc/bounty" rel="external nofollow noopener noreferrer" target="_blank"><strong>Microsoft Bug Bounty Program</strong></a></li>
+</ul>
+<p><img src="/image/etc/developing-good-enough-software-06.png" alt></p>
+<h4 id="사용자는-제품이-완벽하지-않아도-상관하지-않는다"><a href="#사용자는-제품이-완벽하지-않아도-상관하지-않는다" class="headerlink" title="사용자는 제품이 완벽하지 않아도 상관하지 않는다"></a>사용자는 제품이 완벽하지 않아도 상관하지 않는다</h4><p>사용자들은 완벽한 버전을 위해 일년을 기다리느니 차라리 <strong>오늘 당장의 불편한 소프트웨어</strong>를 사용하고싶어한다.</p>
+<h4 id="Late-is-never-better"><a href="#Late-is-never-better" class="headerlink" title="Late is never better"></a>Late is never better</h4><p>Product A와 B가 있다고 했을 때</p>
+<ul>
+<li>A:  기능은 하지만 가끔씩 오류가 나서 사용자가 주기적으로 저장을 하지 않으면 자료가 날아가는 경우가 있다.</li>
+<li>B:  A에 비해 저렴하고 추가 기능이 여러가지 있다. 하지만, 아직 출시가 되지 않은 제품이다.</li>
+</ul>
+<p>이미 시장에는 A를 사용하는 유저들이 많다. 1년 뒤 B가 출시 되면 사용자들이 A를 버리고 B로 쉽게 갈아탈까?<br>⇒ 그렇지 않을 것이다.</p>
+<p>이미 A를 사용하면서 생긴 관성을 거스르기 힘들다.</p>
+<ul>
+<li>파일 포맷</li>
+<li>다른 제품을 배워야하는 노력</li>
+</ul>
+<p>비록 A가 결함은 있지만 사용자가 원하는 기능을 잘 수행하고 있다.</p>
+<p>빠르게 제품을 내놓아 시장을 선점을 하는 것이 중요한 서비스 기업의 특성 상 제품을 시장에 빠르게 내놓는 것이 제품의 몇몇 결함보다 중요할 수 있다.</p>
+<h3 id="타협하기-Negotiating"><a href="#타협하기-Negotiating" class="headerlink" title="타협하기 (Negotiating)"></a>타협하기 (Negotiating)</h3><p>품질을 통제할 수 있다면 좋겠지만 실세계에서는 진정으로 완벽한 것을 만들어 내기란 불가능하다. 그렇기 때문에 <strong>타협</strong>의 과정이 필요하다.</p>
+<p>시스템이 성공하려면 생산해 낸 것이 어느 정도면 적당히 괜찮은지를 결정하는 타협의 과정에 사용자가 참여할 기회를 가져야 한다. 사용자는 본인이 원하는 <strong>요구사항</strong>을 확인할 수 있는 직접 만져볼 수 있는 제품을 일찍 준다면, 피드백을 통해 더 나은 솔루션에 도달할 수 있을 것이다.</p>
+<p>또한 회사는 타협하는 시점에 어느정도 결함은 안고 가는 전략을 취할 수 있다.</p>
+<h2 id="마무리"><a href="#마무리" class="headerlink" title="마무리"></a>마무리</h2><p>개발자는 (적은) 한정된 시간에 (많은) 주어진 업무를 처리하기 위해 유혹에 빠지기 쉽다.<br>당장의 편의를 위해 빠른 길을 선택하면 당장의 몇 초를 절약할 수 있을지라도, 나중에는 몇 시간을 잃을 수 있다.<br>나중의 고통을 피하기 위해서는 훈련과 미연에 시간을 기꺼이 투자할 의지가 있어야한다.</p>
+<p><img src="/image/etc/developing-good-enough-software-07.png" alt></p>
+<p>x: Release Version, y: Cost</p>
+<p>그렇기에 개발자는 스스로 본인의 업무에 책임을 지고 더 좋은 품질을 갖는 결과물을 만들어내려는 자세를 지녀야한다.</p>
+<p>이러한 자세는 전문가로서 훌륭하고 마땅히 가져야하는 자세라고 생각하지만 제품을 직접 개발하는 입장에서 (존재하지 않는) 완벽을 향해 달려가다 스트레스를 받으면서 제풀에 지치는 것 보다 어느정도 적당한 수준에서 타협을 통해 생산성을 높이는 것 또한 개발자 뿐만 아니라 회사에게도 좋은 전략이라고 생각한다.</p>
+<p><img src="/image/etc/developing-good-enough-software-08.png" alt></p>
+<p><code>적당히 괜찮은 소프트웨어</code>를 통해 개발자는 보다 생산성이 올라갈 것이며, 사용자는 결과물에 한층 더 행복해 할 것이다.</p>
+<h2 id="참고-자료"><a href="#참고-자료" class="headerlink" title="참고 자료"></a>참고 자료</h2><ul>
+<li><a href="http://www.yes24.com/Product/Goods/12501565" rel="external nofollow noopener noreferrer" target="_blank">실용주의 프로그래머</a>: 4. 적당히 괜찮은 소프트웨어</li>
+<li>IEEE: ⭐️<a href="https://www.liamwho.com/wp-content/uploads/When-Good-Enough-Software-Is-Best.pdf" rel="external nofollow noopener noreferrer" target="_blank">When good enough software is best</a></li>
+<li>Wikipedia: <a href="https://en.wikipedia.org/wiki/Principle_of_good_enough" rel="external nofollow noopener noreferrer" target="_blank">Principle of good enough</a></li>
+<li>Wikipedia: <a href="https://en.wikipedia.org/wiki/Perfect_is_the_enemy_of_good" rel="external nofollow noopener noreferrer" target="_blank">Perfect is the enemy of good</a></li>
+<li>Wikipedia: <a href="https://en.wikipedia.org/wiki/Worse_is_better" rel="external nofollow noopener noreferrer" target="_blank">Worse is better</a></li>
+<li>Wikipedia: <a href="https://en.wikipedia.org/wiki/Unix_philosophy" rel="external nofollow noopener noreferrer" target="_blank">Unix philosophy</a></li>
+<li>SlideShare: <a href="https://www.slideshare.net/AgileOnTheBeach/slow-and-dirty-with-callouts" rel="external nofollow noopener noreferrer" target="_blank">Slow and dirty with callouts</a></li>
+<li>Blog: <a href="https://cheerfulmonk.com/optimizing-stress/" rel="external nofollow noopener noreferrer" target="_blank">Optimizing Stress</a></li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2020/06/09/etc/developing-good-enough-software/" data-id="ckb7ysl7j0000pmiqq5z4pvqv" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/06/02/go/ETC/script-with-go/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Go로 스크립트 작성하기</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/06/09/etc/developing-good-enough-software/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/developing-good-enough-software-01.png)" alt="적당히 괜찮은 소프트웨어 개발하기" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a></p>
+                            <p class="item-title"><a href="/2020/06/09/etc/developing-good-enough-software/" class="title">적당히 괜찮은 소프트웨어 개발하기</a></p>
+                            <p class="item-date"><time datetime="2020-06-09T14:30:00.000Z" itemprop="datePublished">2020-06-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/06/02/go/ETC/script-with-go/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/go/">go</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/go/etc/">ETC</a></p>
+                            <p class="item-title"><a href="/2020/06/02/go/ETC/script-with-go/" class="title">Go로 스크립트 작성하기</a></p>
+                            <p class="item-date"><time datetime="2020-06-01T23:10:00.000Z" itemprop="datePublished">2020-06-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/05/31/js/js/winston-02-logging-level/" class="thumbnail">
+    
+    
+        <span style="background-image:url(2020-05-31-21-48-26.png)" alt="winston 02 - Logging Level" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/js/">js</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/js/js/">js</a></p>
+                            <p class="item-title"><a href="/2020/05/31/js/js/winston-02-logging-level/" class="title">winston 02 - Logging Level</a></p>
+                            <p class="item-date"><time datetime="2020-05-31T12:40:00.000Z" itemprop="datePublished">2020-05-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/05/31/js/js/winston-01-logger/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/js/">js</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/js/js/">js</a></p>
+                            <p class="item-title"><a href="/2020/05/31/js/js/winston-01-logger/" class="title">winston 01 - Logger</a></p>
+                            <p class="item-date"><time datetime="2020-05-31T12:30:00.000Z" itemprop="datePublished">2020-05-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/05/31/go/basics/array-and-slice/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/go/basics/array-and-slice-01.png)" alt="Array and Slice" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/go/">go</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/go/basics/">basics</a></p>
+                            <p class="item-title"><a href="/2020/05/31/go/basics/array-and-slice/" class="title">Array and Slice</a></p>
+                            <p class="item-date"><time datetime="2020-05-31T05:00:00.000Z" itemprop="datePublished">2020-05-31</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">78</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">12</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">26</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/aws/">aws</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/intellij/">intellij</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/etc/">ETC</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/basics/">basics</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/">js</a><span class="category-list-count">11</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/js/nest-js/">Nest.js</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/js/">js</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/ts/">ts</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">23</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aio/">AIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intellij/">IntelliJ</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/array/">array</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aws/">aws</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bcrypt/">bcrypt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/constraint/">constraint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/di/">di</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eslint/">eslint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/good-enough-software/">good enough software</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/">hash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lexical-scope/">lexical scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monorepo/">monorepo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-module/">multi module</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nestjs/">nestjs</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextjs/">nextjs</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/password/">password</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pragmatic-programmer/">pragmatic programmer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/retrospect/">retrospect</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/">scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/script/">script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/">serverless</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/slice/">slice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/">typescript</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript-eslint/">typescript-eslint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpc/">vpc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webstorm/">webstorm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/winston/">winston</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/실용주의-프로그래머/">실용주의 프로그래머</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">29</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/aio/" style="font-size: 10px;">AIO</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/intellij/" style="font-size: 10.71px;">IntelliJ</a> <a href="/tags/jpa/" style="font-size: 13.57px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 17.14px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 16.43px;">algorithm</a> <a href="/tags/array/" style="font-size: 10px;">array</a> <a href="/tags/aws/" style="font-size: 10.71px;">aws</a> <a href="/tags/bash/" style="font-size: 12.14px;">bash</a> <a href="/tags/basic/" style="font-size: 11.43px;">basic</a> <a href="/tags/bcrypt/" style="font-size: 10px;">bcrypt</a> <a href="/tags/book/" style="font-size: 17.14px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.43px;">cloud functions</a> <a href="/tags/constraint/" style="font-size: 10px;">constraint</a> <a href="/tags/daily/" style="font-size: 10.71px;">daily</a> <a href="/tags/db/" style="font-size: 18.57px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/di/" style="font-size: 10px;">di</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/english/" style="font-size: 15.71px;">english</a> <a href="/tags/eslint/" style="font-size: 10px;">eslint</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.43px;">firebase</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/go/" style="font-size: 10.71px;">go</a> <a href="/tags/good-enough-software/" style="font-size: 10px;">good enough software</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 11.43px;">javascript</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.71px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10.71px;">lambda</a> <a href="/tags/lexical-scope/" style="font-size: 10px;">lexical scope</a> <a href="/tags/linux/" style="font-size: 13.57px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 12.14px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.71px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/monorepo/" style="font-size: 10px;">monorepo</a> <a href="/tags/multi-module/" style="font-size: 10px;">multi module</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/nestjs/" style="font-size: 13.57px;">nestjs</a> <a href="/tags/nextjs/" style="font-size: 11.43px;">nextjs</a> <a href="/tags/pagination/" style="font-size: 12.86px;">pagination</a> <a href="/tags/password/" style="font-size: 10px;">password</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 15px;">postman</a> <a href="/tags/pragmatic-programmer/" style="font-size: 10px;">pragmatic programmer</a> <a href="/tags/python/" style="font-size: 11.43px;">python</a> <a href="/tags/redis/" style="font-size: 17.86px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/retrospect/" style="font-size: 10px;">retrospect</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/script/" style="font-size: 10px;">script</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/serverless/" style="font-size: 10px;">serverless</a> <a href="/tags/slice/" style="font-size: 10px;">slice</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.71px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.71px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/typescript/" style="font-size: 14.29px;">typescript</a> <a href="/tags/typescript-eslint/" style="font-size: 10px;">typescript-eslint</a> <a href="/tags/validation/" style="font-size: 10.71px;">validation</a> <a href="/tags/vpc/" style="font-size: 10px;">vpc</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.86px;">webrtc</a> <a href="/tags/webstorm/" style="font-size: 10px;">webstorm</a> <a href="/tags/winston/" style="font-size: 10.71px;">winston</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/실용주의-프로그래머/" style="font-size: 10px;">실용주의 프로그래머</a> <a href="/tags/회고/" style="font-size: 19.29px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2020/06/09/etc/developing-good-enough-software/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+
