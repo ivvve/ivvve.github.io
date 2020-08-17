@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    <script data-ad-client="ca-pub-8120889671830711" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>WebSocket Server에서 Connection `close` 이벤트를 받지 못할 때 | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="websocket">
+    
+    <meta name="description" content="WebSocket 서버를 운영하다보면 가끔 Client WebSocket Connection이 끊겨졌음에도 서버에서는 close이벤트를 수신하지 못할 때가 있다.아마 WebSocket 서버에서 WebSocket Connection이 close될 때 해당 Connection과 관련된 데이터를 정리하는 코드를 작성해놨을텐데,close 이벤트가 제대로 동작하질">
+<meta name="keywords" content="websocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebSocket Server에서 Connection `close` 이벤트를 받지 못할 때">
+<meta property="og:url" content="http://ivvve.github.io/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="WebSocket 서버를 운영하다보면 가끔 Client WebSocket Connection이 끊겨졌음에도 서버에서는 close이벤트를 수신하지 못할 때가 있다.아마 WebSocket 서버에서 WebSocket Connection이 close될 때 해당 Connection과 관련된 데이터를 정리하는 코드를 작성해놨을텐데,close 이벤트가 제대로 동작하질">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/etc/why-websocket-server-doesnt-emit-close-event-01.png">
+<meta property="og:updated_time" content="2020-08-17T06:43:32.239Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebSocket Server에서 Connection `close` 이벤트를 받지 못할 때">
+<meta name="twitter:description" content="WebSocket 서버를 운영하다보면 가끔 Client WebSocket Connection이 끊겨졌음에도 서버에서는 close이벤트를 수신하지 못할 때가 있다.아마 WebSocket 서버에서 WebSocket Connection이 close될 때 해당 Connection과 관련된 데이터를 정리하는 코드를 작성해놨을텐데,close 이벤트가 제대로 동작하질">
+<meta name="twitter:image" content="http://ivvve.github.io/image/etc/why-websocket-server-doesnt-emit-close-event-01.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/aws/">aws</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/intellij/">intellij</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/">go</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/basics/">basics</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/">js</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/nest-js/">Nest.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/js/">js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/ts/">ts</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/rdb/">rdb</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/etc/">etc</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-etc/why-websocket-server-doesnt-emit-close-event" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        WebSocket Server에서 Connection `close` 이벤트를 받지 못할 때
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/" class="article-date">
+            <time datetime="2020-08-17T06:30:00.000Z" itemprop="datePublished">2020-08-17</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/websocket/">websocket</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>WebSocket 서버를 운영하다보면 가끔 Client WebSocket Connection이 끊겨졌음에도 서버에서는 <code>close</code>이벤트를 수신하지 못할 때가 있다.<br>아마 WebSocket 서버에서 WebSocket Connection이 <code>close</code>될 때 해당 Connection과 관련된 데이터를 정리하는 코드를 작성해놨을텐데,<br><code>close</code> 이벤트가 제대로 동작하질 않으니 이 데이터 정리 코드가 실행되지 않을 것이고 이는 곧 버그로 이어질 가능성이 높다.</p>
+<p>나도 WebSocket을 사용한 실시간 서비스 서버를 개발하면서 이러한 문제를 겪었고 그 원인에 대해 찾아보고 대처를 한 것에 대해 정리하고자 이 글을 포스팅한다.</p>
+<hr>
+<p>먼저 내가 해당 문제를 재현한 방법은 WebSocket Connection이 생성된 Client에서 Network를 끊어버리는 것이었다.</p>
+<p>단순히 생각하면 Network가 끊겼기 때문에 결국 연결이 끊겨 <code>close</code>이벤트가 발생해야하는게 아니냐라고 생각할 수 있지만 해당 원인을 이해하기 위해서는 WebSocket Protocol에 대해 어느정도 알 필요가 있다.</p>
+<p><strong>WebSocket Protocol</strong>에서 연결을 맺고, 종료하는 과정은 일련의 <strong>handshake</strong>로 이루어져있다.</p>
+<p><img src="/image/etc/why-websocket-server-doesnt-emit-close-event-01.png" alt></p>
+<p>출처: <a href="https://docs.axway.com/bundle/axway-open-docs/page/docs/apim_policydev/apigw_gw_instances/general_websocket/index.html" rel="external nofollow noopener noreferrer" target="_blank">https://docs.axway.com/bundle/axway-open-docs/page/docs/apim_policydev/apigw_gw_instances/general_websocket/index.html</a></p>
+<p>Close하는 부분을 보면 마치 TCP/IP의 handshake와 비슷하다.</p>
+<p><img src="/image/etc/why-websocket-server-doesnt-emit-close-event-02.png" alt></p>
+<p>출처: <a href="http://aurumme.com/atech/tcp-3-way-handshake-process/" rel="external nofollow noopener noreferrer" target="_blank">http://aurumme.com/atech/tcp-3-way-handshake-process/</a></p>
+<p><a href="https://tools.ietf.org/html/rfc6455" rel="external nofollow noopener noreferrer" target="_blank">WebSocket Protocl RFC 표준 문서</a>의 <a href="https://tools.ietf.org/html/rfc6455#section-1.4" rel="external nofollow noopener noreferrer" target="_blank">Closing handshake 관련 부분</a>을 보면 다음과 같이 설명을 한다.</p>
+<p><em>Either peer can send a control frame with data containing a specified control sequence to begin the closing handshake (detailed in Section 5.5.1).<br>둘 중 어느 피어가 closing handshake를 시작하기 위한 특정 control sequence를 포함한 control frame을 보낼 수 있다.<br>Upon receiving such a frame, the other peer sends a Close frame in response, if it hasn’t already sent one.<br>그러한 frame을 수신하면, 다른 피어는 Close frame을 응답 안에 보낸다, 만약 그것을 이미 보내지 않았다면.<br>Upon receiving that control frame, the first peer then closes the connection, safe in the knowledge that no further data is forthcoming.<br>해당 (응답의) control frame을 수신하면, 첫번째 피어는 연결을 닫고, 더 이상 데이터는 오지 않을 것이라고 판단한다.</em></p>
+<p>위 다이어그램과 표준 문서의 설명에서 보여주듯, WebSocket Connection을 Close 할 때 Server와 Client 사이의 일련의 handshake 과정을 거쳐야 한다.<br>그렇기 때문에 만약 Client 쪽에서 네트워크에 문제가 생겨 일방적으로 연결이 끊기게 되면 handshake 과정이 이뤄지지 않아 서버에서는 해당 Connection이 연결이 끊겼는지 알 수 없다. </p>
+<p>그렇다면 이러한 경우 어떻게 서버가 해당 Connection이 Close 되었는지 판단할 수 있을까?</p>
+<p><a href="https://github.com/websockets/ws" rel="external nofollow noopener noreferrer" target="_blank">javascript WebSocket library인 ws</a>는 일정 주기로 서버에 붙은 WebSocket Connection들에게 ping을 보내서 해당 Connection이 정상적으로 연결되어있는지 확인하라고 한다.</p>
+<p><a href="https://github.com/websockets/ws#how-to-detect-and-close-broken-connections" rel="external nofollow noopener noreferrer" target="_blank">How to detect and close broken connections?</a> </p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> WebSocket = <span class="built_in">require</span>(<span class="string">'ws'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">noop</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">heartbeat</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.isAlive = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> wss = <span class="keyword">new</span> WebSocket.Server(&#123; <span class="attr">port</span>: <span class="number">8080</span> &#125;);</span><br><span class="line"></span><br><span class="line">wss.on(<span class="string">'connection'</span>, <span class="function"><span class="keyword">function</span> <span class="title">connection</span>(<span class="params">ws</span>) </span>&#123;</span><br><span class="line">  ws.isAlive = <span class="literal">true</span>;</span><br><span class="line">  ws.on(<span class="string">'pong'</span>, heartbeat);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 주기적으로 모든 WebSocket Connection에게 ping을 보내 connection 상태 확인</span></span><br><span class="line"><span class="keyword">const</span> interval = setInterval(<span class="function"><span class="keyword">function</span> <span class="title">ping</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  wss.clients.forEach(<span class="function"><span class="keyword">function</span> <span class="title">each</span>(<span class="params">ws</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ws.isAlive === <span class="literal">false</span>) <span class="keyword">return</span> ws.terminate();</span><br><span class="line"></span><br><span class="line">    ws.isAlive = <span class="literal">false</span>;</span><br><span class="line">    ws.ping(noop);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;, <span class="number">30000</span>);</span><br><span class="line"></span><br><span class="line">wss.on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span> <span class="title">close</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  clearInterval(interval);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>WebSocket은 실시간 통신을 매우 쉽고 편리하게 구현할 수 있지만 실제 서비스에서 사용하기 위해서는 위와 같은 여러 edge case를 따져봐야 한다.</p>
+<p>특히 위와 같이 Client 쪽에서 Network가 끊기는 경우는 Mobile Application에서는 충분히 일어날 수 있는 일이기 때문에 해당의 케이스는 꼭 확인하도록 하자.</p>
+<hr>
+<p>참고:</p>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc6455" rel="external nofollow noopener noreferrer" target="_blank">https://tools.ietf.org/html/rfc6455</a></li>
+<li><a href="https://docs.axway.com/bundle/axway-open-docs/page/docs/apim_policydev/apigw_gw_instances/general_websocket/index.html" rel="external nofollow noopener noreferrer" target="_blank">https://docs.axway.com/bundle/axway-open-docs/page/docs/apim_policydev/apigw_gw_instances/general_websocket/index.html</a></li>
+<li><a href="https://github.com/websockets/ws" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/websockets/ws</a></li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/" data-id="ckdy57lt80000t8iqi4yaaebw" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/07/08/server/rdb/is-fk-indexed/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Foreign Key에도 index가 걸릴까?</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/etc/why-websocket-server-doesnt-emit-close-event-01.png)" alt="WebSocket Server에서 Connection `close` 이벤트를 받지 못할 때" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a></p>
+                            <p class="item-title"><a href="/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/" class="title">WebSocket Server에서 Connection `close` 이벤트를 받지 못할 때</a></p>
+                            <p class="item-date"><time datetime="2020-08-17T06:30:00.000Z" itemprop="datePublished">2020-08-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/07/08/server/rdb/is-fk-indexed/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/server/rdb/is-fk-indexed-01.png)" alt="Foreign Key에도 index가 걸릴까?" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/server/">server</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/server/rdb/">rdb</a></p>
+                            <p class="item-title"><a href="/2020/07/08/server/rdb/is-fk-indexed/" class="title">Foreign Key에도 index가 걸릴까?</a></p>
+                            <p class="item-date"><time datetime="2020-07-08T14:30:00.000Z" itemprop="datePublished">2020-07-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/06/27/etc/solid-isp/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/etc/">etc</a></p>
+                            <p class="item-title"><a href="/2020/06/27/etc/solid-isp/" class="title">Interface Separation Principle</a></p>
+                            <p class="item-date"><time datetime="2020-06-27T14:30:00.000Z" itemprop="datePublished">2020-06-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/06/21/daily/life/daily-20200621/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/life/">life</a></p>
+                            <p class="item-title"><a href="/2020/06/21/daily/life/daily-20200621/" class="title">Am I a professional?</a></p>
+                            <p class="item-date"><time datetime="2020-06-21T01:00:00.000Z" itemprop="datePublished">2020-06-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/06/17/js/js/class-method-vs-field-function/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/js/">js</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/js/js/">js</a></p>
+                            <p class="item-title"><a href="/2020/06/17/js/js/class-method-vs-field-function/" class="title">Class method vs field function</a></p>
+                            <p class="item-date"><time datetime="2020-06-17T14:00:00.000Z" itemprop="datePublished">2020-06-17</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">79</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">12</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">28</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/aws/">aws</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/intellij/">intellij</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/etc/">ETC</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/basics/">basics</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">31</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/">js</a><span class="category-list-count">12</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/js/nest-js/">Nest.js</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/js/">js</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/ts/">ts</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">24</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/rdb/">rdb</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aio/">AIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isp/">ISP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intellij/">IntelliJ</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solid/">SOLID</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/array/">array</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aws/">aws</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bcrypt/">bcrypt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/constraint/">constraint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/di/">di</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eslint/">eslint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fk/">fk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/good-enough-software/">good enough software</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/">hash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">31</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lexical-scope/">lexical scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monorepo/">monorepo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-module/">multi module</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nestjs/">nestjs</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextjs/">nextjs</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/password/">password</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pk/">pk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pragmatic-programmer/">pragmatic programmer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rdb/">rdb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/retrospect/">retrospect</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/">scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/script/">script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/">serverless</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/slice/">slice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/">typescript</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript-eslint/">typescript-eslint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpc/">vpc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/websocket/">websocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webstorm/">webstorm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/winston/">winston</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/실용주의-프로그래머/">실용주의 프로그래머</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">29</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/aio/" style="font-size: 10px;">AIO</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/isp/" style="font-size: 10px;">ISP</a> <a href="/tags/intellij/" style="font-size: 10.71px;">IntelliJ</a> <a href="/tags/jpa/" style="font-size: 13.57px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/solid/" style="font-size: 10px;">SOLID</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 17.14px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/algorithm/" style="font-size: 16.43px;">algorithm</a> <a href="/tags/array/" style="font-size: 10px;">array</a> <a href="/tags/aws/" style="font-size: 10.71px;">aws</a> <a href="/tags/bash/" style="font-size: 12.14px;">bash</a> <a href="/tags/basic/" style="font-size: 11.43px;">basic</a> <a href="/tags/bcrypt/" style="font-size: 10px;">bcrypt</a> <a href="/tags/book/" style="font-size: 17.14px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.43px;">cloud functions</a> <a href="/tags/constraint/" style="font-size: 10px;">constraint</a> <a href="/tags/daily/" style="font-size: 10.71px;">daily</a> <a href="/tags/db/" style="font-size: 18.57px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/di/" style="font-size: 10px;">di</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/english/" style="font-size: 15.71px;">english</a> <a href="/tags/eslint/" style="font-size: 10px;">eslint</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.43px;">firebase</a> <a href="/tags/fk/" style="font-size: 10px;">fk</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/go/" style="font-size: 10.71px;">go</a> <a href="/tags/good-enough-software/" style="font-size: 10px;">good enough software</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 12.14px;">javascript</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.71px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10.71px;">lambda</a> <a href="/tags/lexical-scope/" style="font-size: 10px;">lexical scope</a> <a href="/tags/linux/" style="font-size: 13.57px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 12.14px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.71px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/monorepo/" style="font-size: 10px;">monorepo</a> <a href="/tags/multi-module/" style="font-size: 10px;">multi module</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/nestjs/" style="font-size: 13.57px;">nestjs</a> <a href="/tags/nextjs/" style="font-size: 11.43px;">nextjs</a> <a href="/tags/pagination/" style="font-size: 12.86px;">pagination</a> <a href="/tags/password/" style="font-size: 10px;">password</a> <a href="/tags/pk/" style="font-size: 10px;">pk</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 15px;">postman</a> <a href="/tags/pragmatic-programmer/" style="font-size: 10px;">pragmatic programmer</a> <a href="/tags/python/" style="font-size: 11.43px;">python</a> <a href="/tags/rdb/" style="font-size: 10px;">rdb</a> <a href="/tags/redis/" style="font-size: 17.86px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/retrospect/" style="font-size: 10px;">retrospect</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/script/" style="font-size: 10px;">script</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/serverless/" style="font-size: 10px;">serverless</a> <a href="/tags/slice/" style="font-size: 10px;">slice</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.71px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.71px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/typescript/" style="font-size: 14.29px;">typescript</a> <a href="/tags/typescript-eslint/" style="font-size: 10px;">typescript-eslint</a> <a href="/tags/validation/" style="font-size: 10.71px;">validation</a> <a href="/tags/vpc/" style="font-size: 10px;">vpc</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.86px;">webrtc</a> <a href="/tags/websocket/" style="font-size: 10px;">websocket</a> <a href="/tags/webstorm/" style="font-size: 10px;">webstorm</a> <a href="/tags/winston/" style="font-size: 10.71px;">winston</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/실용주의-프로그래머/" style="font-size: 10px;">실용주의 프로그래머</a> <a href="/tags/회고/" style="font-size: 19.29px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2020/08/17/etc/why-websocket-server-doesnt-emit-close-event/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+
