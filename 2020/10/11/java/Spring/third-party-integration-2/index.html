@@ -25,12 +25,12 @@
 <meta property="og:site_name" content="Be an Overachiever">
 <meta property="og:description" content="DataDog과 Spring Boot를 연동하는 방법이 여러가지가 있겠지만 이 예제에서는 Spring Boot Metrics를 사용하여 DataDog과 연동하는 방법에 대해 알아보도록 하겠다. 참고: https://docs.spring.io/spring-metrics/docs/current/public/datadog (DataDog 계정이 이미 있다는 가정">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://ivvve.github.io/2020/10/11/java/Spring/third-party-integration-2/2020-10-11-11-13-15.png">
-<meta property="og:updated_time" content="2020-10-11T02:18:27.296Z">
+<meta property="og:image" content="http://ivvve.github.io/image/java/Spring/third-party-integration/third-party-integration-2-01.png">
+<meta property="og:updated_time" content="2020-10-11T02:24:08.747Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 2. DataDog 연동">
 <meta name="twitter:description" content="DataDog과 Spring Boot를 연동하는 방법이 여러가지가 있겠지만 이 예제에서는 Spring Boot Metrics를 사용하여 DataDog과 연동하는 방법에 대해 알아보도록 하겠다. 참고: https://docs.spring.io/spring-metrics/docs/current/public/datadog (DataDog 계정이 이미 있다는 가정">
-<meta name="twitter:image" content="http://ivvve.github.io/2020/10/11/java/Spring/third-party-integration-2/2020-10-11-11-13-15.png">
+<meta name="twitter:image" content="http://ivvve.github.io/image/java/Spring/third-party-integration/third-party-integration-2-01.png">
     
     <link rel="canonical" href="http://ivvve.github.io/2020/10/11/java/spring/third-party-integration-2/">
     
@@ -191,9 +191,9 @@
 <p>(DataDog 계정이 이미 있다는 가정하에 진행하도록 하겠다.)</p>
 <h2 id="DataDog-Secret"><a href="#DataDog-Secret" class="headerlink" title="DataDog Secret"></a>DataDog Secret</h2><p>DataDog을 application과 연동하기 위한 Secret을 발급받아보자.</p>
 <p>DataDog 로그인을 한 뒤 <strong>Integrations</strong> → <strong>APIs</strong> 을 들어가면 API Key와 Application Key를 새로 발급받을 수 있다.</p>
-<p><img src="2020-10-11-11-13-15.png" alt><br><img src="/image/java/Spring/third-party-integration/third-party-integration-2-01.png" alt></p>
+<p><img src="/image/java/Spring/third-party-integration/third-party-integration-2-01.png" alt></p>
 <p>다음과 같이 새로운 secret이 발급된다.</p>
-<p><img src="2020-10-11-11-13-27.png" alt><br><img src="/image/java/Spring/third-party-integration/third-party-integration-2-02.png" alt></p>
+<p><img src="/image/java/Spring/third-party-integration/third-party-integration-2-02.png" alt></p>
 <h2 id="Application-설정"><a href="#Application-설정" class="headerlink" title="Application 설정"></a>Application 설정</h2><p>초반 프로젝트 생성을 했을 때 주석 처리했던 DataDog dependency를 풀도록한다.</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">runtimeOnly</span> <span class="string">'io.micrometer:micrometer-registry-datadog'</span></span><br></pre></td></tr></table></figure>
 
@@ -357,7 +357,7 @@
                             <a href="/2020/10/11/java/Spring/third-party-integration-2/" class="thumbnail">
     
     
-        <span style="background-image:url(2020-10-11-11-13-15.png)" alt="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 2. DataDog 연동" class="thumbnail-image"></span>
+        <span style="background-image:url(/image/java/Spring/third-party-integration/third-party-integration-2-01.png)" alt="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 2. DataDog 연동" class="thumbnail-image"></span>
     
     
 </a>
