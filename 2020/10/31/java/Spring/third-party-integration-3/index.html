@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="6S_T8CPI9UL6mJp__aaeZK0ohOTAsjn92lK-ClbpZog">
+    <meta name="naver-site-verification" content="2923661cc075ca75638f120d88ac6081b480f186">
+    <script data-ad-client="ca-pub-8120889671830711" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">
+    
+
+   
+    
+    <title>Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 3. Vault 연동 | Be an Overachiever</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="java,Spring,DataDog,Sentry,Vault">
+    
+    <meta name="description" content="예제 코드는 Github repository에서 확인 가능합니다.  앞서 Sentry, DataDog을 연동할 때 secret(DSN, API key, Application Key)을 그대로 application.yml에 넣어서 사용하였다.하지만 secret이 VCS에 포함될 경우 보안 측면에서 bad practice이며 외부 유출 가능성이 있다. 그렇기">
+<meta name="keywords" content="java,Spring,DataDog,Sentry,Vault">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 3. Vault 연동">
+<meta property="og:url" content="http://ivvve.github.io/2020/10/31/java/Spring/third-party-integration-3/index.html">
+<meta property="og:site_name" content="Be an Overachiever">
+<meta property="og:description" content="예제 코드는 Github repository에서 확인 가능합니다.  앞서 Sentry, DataDog을 연동할 때 secret(DSN, API key, Application Key)을 그대로 application.yml에 넣어서 사용하였다.하지만 secret이 VCS에 포함될 경우 보안 측면에서 bad practice이며 외부 유출 가능성이 있다. 그렇기">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ivvve.github.io/image/java/Spring/third-party-integration/third-party-integration-3-01.png">
+<meta property="og:updated_time" content="2020-10-31T05:16:21.083Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 3. Vault 연동">
+<meta name="twitter:description" content="예제 코드는 Github repository에서 확인 가능합니다.  앞서 Sentry, DataDog을 연동할 때 secret(DSN, API key, Application Key)을 그대로 application.yml에 넣어서 사용하였다.하지만 secret이 VCS에 포함될 경우 보안 측면에서 bad practice이며 외부 유출 가능성이 있다. 그렇기">
+<meta name="twitter:image" content="http://ivvve.github.io/image/java/Spring/third-party-integration/third-party-integration-3-01.png">
+    
+    <link rel="canonical" href="http://ivvve.github.io/2020/10/31/java/spring/third-party-integration-3/">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131190700-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131190700-1');
+    </script>
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">coding hathenom</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/">daily</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/algorithm/">algorithm</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/life/">life</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/retrospect/">retrospect</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/seminar/">seminar</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/daily/sentences/">sentences</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/">etc</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/aws/">aws</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/firebase/">firebase</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/intellij/">intellij</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/postman/">postman</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/vscode/">vscode</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/etc/webrtc/">webrtc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/">go</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/go/basics/">basics</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/">java</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/etc/">ETC</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/jpa/">JPA</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/spring/">Spring</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/java/java8/">java8</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/">js</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/nest-js/">Nest.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/js/">js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/js/ts/">ts</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/linux/">linux</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/">python</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/python/basic/">basic</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/">server</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/graphql/">graphql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/postgresql/">postgresql</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/rdb/">rdb</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/redis/">redis</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/server/tomcat/">tomcat</a></li></ul></li></ul>
+                                    
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/java/">java</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/java/spring/">Spring</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-java/Spring/third-party-integration-3" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 3. Vault 연동
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/10/31/java/Spring/third-party-integration-3/" class="article-date">
+            <time datetime="2020-10-31T05:30:00.000Z" itemprop="datePublished">2020-10-31</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/datadog/">DataDog</a>, <a class="tag-link" href="/tags/sentry/">Sentry</a>, <a class="tag-link" href="/tags/spring/">Spring</a>, <a class="tag-link" href="/tags/vault/">Vault</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>예제 코드는 <a href="https://github.com/ivvve/code-examples/tree/master/spring-boot-thirdparty" rel="external nofollow noopener noreferrer" target="_blank">Github repository</a>에서 확인 가능합니다.</p>
+<hr>
+<p>앞서 Sentry, DataDog을 연동할 때 secret(DSN, API key, Application Key)을 그대로 application.yml에 넣어서 사용하였다.<br>하지만 secret이 VCS에 포함될 경우 보안 측면에서 bad practice이며 외부 유출 가능성이 있다.</p>
+<p>그렇기 때문에 이러한 평문으로 된 secret 값을 안전하게 숨겨주는 tool이 여러가지 있는데,<br>이 예제에서는 <code>Vault</code>를 사용하여 secret 값을 저장하고 꺼내쓰는 방식에 대해 알아보도록 하겠다.</p>
+<h2 id="Vault-설치"><a href="#Vault-설치" class="headerlink" title="Vault 설치"></a>Vault 설치</h2><p>먼저 로컬에 Vault를 설치하여 세팅을 해보자.<br>mac에서는 homebrew를 사용하여 설치하면된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install vault</span><br></pre></td></tr></table></figure>
+
+<p>설치가 되었으면 Vault 서버를 dev로 실행한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ vault server --dev --dev-root-token-id=<span class="string">"00000000-0000-0000-0000-000000000000"</span></span><br><span class="line"></span><br><span class="line">==&gt; Vault server configuration:</span><br><span class="line"></span><br><span class="line">             Api Address: http://127.0.0.1:8200</span><br><span class="line">                     Cgo: disabled</span><br><span class="line">         Cluster Address: https://127.0.0.1:8201</span><br><span class="line">              Go Version: go1.15.2</span><br><span class="line">              Listener 1: tcp (addr: <span class="string">"127.0.0.1:8200"</span>, cluster address: <span class="string">"127.0.0.1:8201"</span>, max_request_duration: <span class="string">"1m30s"</span>, max_request_size: <span class="string">"33554432"</span>, tls: <span class="string">"disabled"</span>)</span><br><span class="line">               Log Level: info</span><br><span class="line">                   Mlock: supported: <span class="literal">false</span>, enabled: <span class="literal">false</span></span><br><span class="line">           Recovery Mode: <span class="literal">false</span></span><br><span class="line">                 Storage: inmem</span><br><span class="line">                 Version: Vault v1.5.4</span><br><span class="line">             Version Sha: 1a730771ec70149293efe91e1d283b10d255c6d1+CHANGES</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://localhost:8200" rel="external nofollow noopener noreferrer" target="_blank">http://localhost:8200</a> 로 접속하면 방금 실행한 Vault 서버로 접속할 수 있다.</p>
+<p>앞서 Vault 서버를 실행할 때 지정했던 개발용 Token으로 로그인한다.<br><img src="/image/java/Spring/third-party-integration/third-party-integration-3-01.png" alt></p>
+<p>로그인 뒤에 <code>secret</code>에 들어가서 새로운 secret을 만들기 위해 <code>Create secrete</code>을 선택한다.<br><img src="/image/java/Spring/third-party-integration/third-party-integration-3-02.png" alt><br><img src="/image/java/Spring/third-party-integration/third-party-integration-3-03.png" alt></p>
+<p>새로운 secret에 Vault 연동 테스트 용으로 다음과 같이 JSON 형태의 값을 추가하자.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"message"</span>: <span class="string">"Hello World"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/java/Spring/third-party-integration/third-party-integration-3-04.png" alt></p>
+<p>그리고 <code>Save</code>를 눌러 secret값을 저장하도록 한다.</p>
+<p>일단 연동이 잘되는지 테스트를 하기 위한 Vault 세팅을 하였고 이제 Spring Boot Application에서 Vault에 연동하기 위한 설정을 하도록 하자.</p>
+<h2 id="Application-설정"><a href="#Application-설정" class="headerlink" title="Application 설정"></a>Application 설정</h2><p>초반 프로젝트 생성을 했을 때 <strong>build.gradle</strong>에 주석 처리했던 <code>Vault config dependency</code>를 풀도록한다.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation <span class="string">'org.springframework.cloud:spring-cloud-starter-vault-config'</span></span><br></pre></td></tr></table></figure>
+
+<p>그리고 Application을 실행하면 다음과 같이 오류가 난다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: Token (spring.cloud.vault.token) must not be empty</span><br><span class="line">	at org.springframework.util.Assert.hasText(Assert.java:287)</span><br><span class="line">	at org.springframework.cloud.vault.config.ClientAuthenticationFactory.createClientAuthentication(ClientAuthenticationFactory.java:143)</span><br><span class="line">	at org.springframework.cloud.vault.config.VaultBootstrapConfiguration.clientAuthentication(VaultBootstrapConfiguration.java:248)</span><br><span class="line">	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">	at java.base/java.lang.reflect.Method.invoke(Method.java:566)</span><br><span class="line">	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)</span><br><span class="line">	... 81 common frames omitted</span><br></pre></td></tr></table></figure>
+
+<p>Vault 접속 설정이 안되있기 때문에 위 에러 로그는 Vault Token을 설정하라는 메세지이다.</p>
+<p><code>Spring Cloud Vault</code> 설정은 secret을 위한 설정값이기 때문에 properties 보다 일찍 load 될 필요가 있다.<br>그렇기 때문에 <strong>application.yml</strong>이 아닌 <strong>bootstrap.yml</strong>에 설정해야한다.</p>
+<p><img src="/image/java/Spring/third-party-integration/third-party-integration-3-05.png" alt></p>
+<p><code>bootstrap-local.yml</code>에 아래와 <strong>Spring Cloud Vault</strong> 설정을 같이 설정한다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  cloud:</span></span><br><span class="line"><span class="attr">    vault:</span></span><br><span class="line"><span class="attr">      enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">      token:</span> <span class="number">00000000</span><span class="bullet">-0000</span><span class="bullet">-0000</span><span class="bullet">-0000</span><span class="bullet">-000000000000</span></span><br><span class="line"><span class="attr">      scheme:</span> <span class="string">http</span></span><br><span class="line"><span class="attr">      host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">      port:</span> <span class="number">8200</span></span><br><span class="line"><span class="attr">      kv:</span></span><br><span class="line"><span class="attr">        enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">        backend:</span> <span class="string">secret</span></span><br><span class="line"><span class="attr">        default-context:</span> <span class="string">local</span></span><br></pre></td></tr></table></figure>
+
+<p>그리고 Vault에 테스트용으로 추가했던 <code>message</code> secret 값을 잘 가져오는지 확인하기 위해서<br>아래와 같이 application main class에 <code>ApplicationRunner</code>를 상속받아 message값을 출력해보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThirdpartyApplication</span> <span class="keyword">implements</span> <span class="title">ApplicationRunner</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;message&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ThirdpartyApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(<span class="keyword">final</span> ApplicationArguments args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"-----------------"</span>);</span><br><span class="line">        System.out.println(message);</span><br><span class="line">        System.out.println(<span class="string">"-----------------"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>local profile로 실행하였을 때 정상적으로 Vault와 연동이 됐다면 아래와 같이 <code>Hello World</code> 메세지가 찍히는 걸 확인할 수 있다.<br><img src="/image/java/Spring/third-party-integration/third-party-integration-3-06.png" alt></p>
+<p>연동 확인은 끝났으니 message를 출력하는 코드는 지우고 local에서 Vault 설정또한 끄도록하자</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThirdpartyApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ThirdpartyApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># bootstrap-local.yml</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  cloud:</span></span><br><span class="line"><span class="attr">    vault:</span></span><br><span class="line"><span class="attr">      enabled:</span> <span class="literal">false</span>  <span class="comment"># 설정 끄기</span></span><br><span class="line"><span class="attr">      token:</span> <span class="number">00000000</span><span class="bullet">-0000</span><span class="bullet">-0000</span><span class="bullet">-0000</span><span class="bullet">-000000000000</span></span><br><span class="line"><span class="attr">      scheme:</span> <span class="string">http</span></span><br><span class="line"><span class="attr">      host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">      port:</span> <span class="number">8200</span></span><br><span class="line"><span class="attr">      kv:</span></span><br><span class="line"><span class="attr">        enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">        backend:</span> <span class="string">secret</span></span><br><span class="line"><span class="attr">        default-context:</span> <span class="string">local</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Sentry-DataDog-설정-옮기기"><a href="#Sentry-DataDog-설정-옮기기" class="headerlink" title="Sentry, DataDog 설정 옮기기"></a>Sentry, DataDog 설정 옮기기</h2><p>이제 Vault 연동은 확인하였기 때문에 <strong>application.yml</strong>에 있는 설정을 옮기도록 하자.</p>
+<p>실질적으로 Sentry, DataDog는 local이 아닌 환경에서 사용하기 때문에<br>Vault에 <code>dev</code>로 path를 따로 만들어서 application.yml에 있는 설정을 옮기도록한다.</p>
+<p><img src="/image/java/Spring/third-party-integration/third-party-integration-3-07.png" alt><br><img src="/image/java/Spring/third-party-integration/third-party-integration-3-08.png" alt></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"management.metrics.export.datadog"</span>: &#123;</span><br><span class="line">    <span class="attr">"enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"api-key"</span>: <span class="string">"your api key"</span>,</span><br><span class="line">    <span class="attr">"application-key"</span>: <span class="string">"your application key"</span>,</span><br><span class="line">    <span class="attr">"host-tag"</span>: <span class="string">"hostTag"</span>,</span><br><span class="line">    <span class="attr">"step"</span>: <span class="string">"PT10S"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"sentry"</span>: &#123;</span><br><span class="line">    <span class="attr">"enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"dsn"</span>: <span class="string">"your dsn"</span>,</span><br><span class="line">    <span class="attr">"stacktrace.app-packages"</span>: <span class="string">"io.github.ivvve.thirdparty"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Vault-설정-환경-변수로-설정하기"><a href="#Vault-설정-환경-변수로-설정하기" class="headerlink" title="Vault 설정 환경 변수로 설정하기"></a>Vault 설정 환경 변수로 설정하기</h2><p>Spring Cloud Vault 설정을 하기 전에 Vault Token 또한 secret인데 이 값을 어디에 두어야하냐도 문제이다.<br><code>bootstrap.yml</code>에 그대로 두면 이 역시 VCS에 저장되기 때문에 보안 측면에서 문제가 되는데 특히 Vault에 모든 secret값이 들어가기 때문에 더욱 문제가 될 수 있다.</p>
+<p>주로 secret 값은 production 환경에서 환경 변수에 저장을 하여 쓰는 경우가 많고 instance 자체가 털리지 않는 한 외부로 노출되기 쉽지 않기 때문에 환경변수에 spring cloud vault 설정 값을 넣고 실행하는 식으로 Vault의 설정값을 지정하도록 하겠다.</p>
+<p>실행 시 적용되는 환경 변수에 bootstrap-local.yml에 있던 값을 그대로 사용하면된다.<br>(대신 profile이 dev기 때문에 그에 맞춰 <code>spring.cloud.vault.kv.default-context</code>값을 dev로 바꿔준다.)</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">spring.cloud.vault.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">spring.cloud.vault.token:</span> <span class="number">00000000</span><span class="bullet">-0000</span><span class="bullet">-0000</span><span class="bullet">-0000</span><span class="bullet">-000000000000</span></span><br><span class="line"><span class="string">spring.cloud.vault.scheme:</span> <span class="string">http</span></span><br><span class="line"><span class="string">spring.cloud.vault.host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="string">spring.cloud.vault.port:</span> <span class="number">8200</span></span><br><span class="line"><span class="string">spring.cloud.vault.kv.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">spring.cloud.vault.kv.backend:</span> <span class="string">secret</span></span><br><span class="line"><span class="string">spring.cloud.vault.kv.default-context:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+<p>나는 IntelliJ를 통해서 dev 환경을 아래와 같이 설정하였다. (Active Profike을 <code>dev</code>로 설정도 하였다)<br><img src="/image/java/Spring/third-party-integration/third-party-integration-3-09.png" alt></p>
+<p>위와 같이 설정하였다면 dev profile로 application을 실행시켜보자.</p>
+<p>문제가 없다면 아래와 같이 정상적으로 로그가 찍히면서 application이 돌아감을 확인할 수 있다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:48.630</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.s.s.c.ThreadPoolTaskScheduler</span>          <span class="string">:</span> <span class="string">Initializing</span> <span class="string">ExecutorService</span></span><br><span class="line"></span><br><span class="line">  <span class="string">.</span>   <span class="string">____</span>          <span class="string">_</span>            <span class="string">__</span> <span class="string">_</span> <span class="string">_</span></span><br><span class="line"> <span class="string">/\\</span> <span class="string">/</span> <span class="string">___'_</span> <span class="string">__</span> <span class="string">_</span> <span class="string">_(_)_</span> <span class="string">__</span>  <span class="string">__</span> <span class="string">_</span> <span class="string">\</span> <span class="string">\</span> <span class="string">\</span> <span class="string">\</span></span><br><span class="line"><span class="string">(</span> <span class="string">(</span> <span class="string">)\___</span> <span class="string">| '_ | '_| | '_ \/ _` | \ \ \ \</span></span><br><span class="line"><span class="string"> \\/  ___)| |_)| | | | | || (_| |  ) ) ) )</span></span><br><span class="line"><span class="string">  '  |____| .__|_| |_|_| |_\__, | / / / /</span></span><br><span class="line"><span class="string"> =========|_|==============|___/=/_/_/_/</span></span><br><span class="line"><span class="string"> :: Spring Boot ::        (v2.3.4.RELEASE)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2020-10-31 13:15:48.876  INFO 58715 --- [           main] o.s.v.c.e.LeaseAwareVaultPropertySource  : Vault location [secret/application/dev] not resolvable: Not found</span></span><br><span class="line"><span class="string">2020-10-31 13:15:48.879  INFO 58715 --- [           main] o.s.v.c.e.LeaseAwareVaultPropertySource  : Vault location [secret/application] not resolvable: Not found</span></span><br><span class="line"><span class="string">2020-10-31 13:15:48.882  INFO 58715 --- [           main] o.s.v.c.e.LeaseAwareVaultPropertySource  : Vault location [secret/dev/dev] not resolvable: Not found</span></span><br><span class="line"><span class="string">2020-10-31 13:15:48.889  INFO 58715 --- [           main] b.c.PropertySourceBootstrapConfiguration : Located property source: [BootstrapPropertySource &#123;name='bootstrapProperties-secret/application/dev'&#125;, BootstrapPropertySource &#123;name='bootstrapProperties-secret/application'&#125;, BootstrapPropertySource &#123;name='bootstrapProperties-secret/dev/dev'&#125;, BootstrapPropertySource &#123;name='bootstrapProperties-secret/dev'&#125;]</span></span><br><span class="line"><span class="string"></span><span class="attr">CONSOLE:</span> <span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:48.894</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">i.g.i.thirdparty.ThirdpartyApplication</span>   <span class="string">:</span> <span class="string">The</span> <span class="string">following</span> <span class="string">profiles</span> <span class="string">are</span> <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.543</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.s.cloud.context.scope.GenericScope</span>     <span class="string">:</span> <span class="string">BeanFactory</span> <span class="string">id=29a7249a-20e1-3d45-b129-e4d7ee447e4c</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.738</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.s.b.w.embedded.tomcat.TomcatWebServer</span>  <span class="string">:</span> <span class="string">Tomcat</span> <span class="string">initialized</span> <span class="string">with</span> <span class="string">port(s):</span> <span class="number">8080</span> <span class="string">(http)</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.750</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.apache.catalina.core.StandardService</span>   <span class="string">:</span> <span class="string">Starting</span> <span class="string">service</span> <span class="string">[Tomcat]</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.750</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">org.apache.catalina.core.StandardEngine</span>  <span class="string">:</span> <span class="string">Starting</span> <span class="string">Servlet</span> <span class="attr">engine:</span> <span class="string">[Apache</span> <span class="string">Tomcat/9.0.38]</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.833</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.a.c.c.C.[Tomcat].[localhost].[/]</span>       <span class="string">:</span> <span class="string">Initializing</span> <span class="string">Spring</span> <span class="string">embedded</span> <span class="string">WebApplicationContext</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.833</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">w.s.c.ServletWebServerApplicationContext</span> <span class="string">:</span> <span class="string">Root</span> <span class="attr">WebApplicationContext:</span> <span class="string">initialization</span> <span class="string">completed</span> <span class="string">in</span> <span class="number">927</span> <span class="string">ms</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:49.873</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">i.m.c.instrument.push.PushMeterRegistry</span>  <span class="string">:</span> <span class="string">publishing</span> <span class="string">metrics</span> <span class="string">for</span> <span class="string">DatadogMeterRegistry</span> <span class="string">every</span> <span class="number">10</span><span class="string">s</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:50.123</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.s.s.concurrent.ThreadPoolTaskExecutor</span>  <span class="string">:</span> <span class="string">Initializing</span> <span class="string">ExecutorService</span> <span class="string">'applicationTaskExecutor'</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:50.500</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.s.b.a.e.web.EndpointLinksResolver</span>      <span class="string">:</span> <span class="string">Exposing</span> <span class="number">2</span> <span class="string">endpoint(s)</span> <span class="string">beneath</span> <span class="string">base</span> <span class="string">path</span> <span class="string">'/actuator'</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:50.583</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">o.s.b.w.embedded.tomcat.TomcatWebServer</span>  <span class="string">:</span> <span class="string">Tomcat</span> <span class="string">started</span> <span class="string">on</span> <span class="string">port(s):</span> <span class="number">8080</span> <span class="string">(http)</span> <span class="string">with</span> <span class="string">context</span> <span class="string">path</span> <span class="string">''</span></span><br><span class="line"><span class="attr">CONSOLE:</span> <span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:50.602</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[</span>           <span class="string">main]</span> <span class="string">i.g.i.thirdparty.ThirdpartyApplication</span>   <span class="string">:</span> <span class="string">Started</span> <span class="string">ThirdpartyApplication</span> <span class="string">in</span> <span class="number">2.952</span> <span class="string">seconds</span> <span class="string">(JVM</span> <span class="string">running</span> <span class="string">for</span> <span class="number">3.671</span><span class="string">)</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:51.102</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[(3)-10.79.1.237]</span> <span class="string">o.a.c.c.C.[Tomcat].[localhost].[/]</span>       <span class="string">:</span> <span class="string">Initializing</span> <span class="string">Spring</span> <span class="string">DispatcherServlet</span> <span class="string">'dispatcherServlet'</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:51.103</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[(3)-10.79.1.237]</span> <span class="string">o.s.web.servlet.DispatcherServlet</span>        <span class="string">:</span> <span class="string">Initializing</span> <span class="string">Servlet</span> <span class="string">'dispatcherServlet'</span></span><br><span class="line"><span class="number">2020</span><span class="bullet">-10</span><span class="bullet">-31</span> <span class="number">13</span><span class="string">:15:51.113</span>  <span class="string">INFO</span> <span class="number">58715</span> <span class="meta">---</span> <span class="string">[(3)-10.79.1.237]</span> <span class="string">o.s.web.servlet.DispatcherServlet</span>        <span class="string">:</span> <span class="string">Completed</span> <span class="string">initialization</span> <span class="string">in</span> <span class="number">9</span> <span class="string">ms</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>지금까지 Application을 운영할 때 필요한 요소인 APM, Error tracking, Secret Managing Tool과 연동하는 방법에 대해 알아보았다.</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://ivvve.github.io/2020/10/31/java/Spring/third-party-integration-3/" data-id="ckgx744e60000p5s0jxco4q8e" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ivvve" target="_blank" rel="external nofollow noopener noreferrer">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/10/11/java/Spring/third-party-integration-2/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 2. DataDog 연동</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/10/31/java/Spring/third-party-integration-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/java/Spring/third-party-integration/third-party-integration-3-01.png)" alt="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 3. Vault 연동" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/spring/">Spring</a></p>
+                            <p class="item-title"><a href="/2020/10/31/java/Spring/third-party-integration-3/" class="title">Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 3. Vault 연동</a></p>
+                            <p class="item-date"><time datetime="2020-10-31T05:30:00.000Z" itemprop="datePublished">2020-10-31</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/10/11/java/Spring/third-party-integration-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/java/Spring/third-party-integration/third-party-integration-2-01.png)" alt="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 2. DataDog 연동" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/spring/">Spring</a></p>
+                            <p class="item-title"><a href="/2020/10/11/java/Spring/third-party-integration-2/" class="title">Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 2. DataDog 연동</a></p>
+                            <p class="item-date"><time datetime="2020-10-11T02:30:00.000Z" itemprop="datePublished">2020-10-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/10/11/java/Spring/third-party-integration-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/java/Spring/third-party-integration/third-party-integration-1-01.png)" alt="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 1. Sentry 연동" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/spring/">Spring</a></p>
+                            <p class="item-title"><a href="/2020/10/11/java/Spring/third-party-integration-1/" class="title">Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 1. Sentry 연동</a></p>
+                            <p class="item-date"><time datetime="2020-10-11T01:30:00.000Z" itemprop="datePublished">2020-10-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/10/05/java/Spring/third-party-integration-0/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/image/java/Spring/third-party-integration/third-party-integration-0-01.png)" alt="Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 0. 프로젝트 생성" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/spring/">Spring</a></p>
+                            <p class="item-title"><a href="/2020/10/05/java/Spring/third-party-integration-0/" class="title">Spring Boot 3rd-party (Sentry + DataDog + Vault) integration 0. 프로젝트 생성</a></p>
+                            <p class="item-date"><time datetime="2020-10-05T14:30:00.000Z" itemprop="datePublished">2020-10-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/09/13/daily/life/daily-20200913-life-is-like-a-box-of-chocolate/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://i.pinimg.com/originals/eb/d3/f7/ebd3f75736fbad2c86d794583445ad6d.jpg)" alt="Life is like a box of chocolate" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/daily/">daily</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/daily/life/">life</a></p>
+                            <p class="item-title"><a href="/2020/09/13/daily/life/daily-20200913-life-is-like-a-box-of-chocolate/" class="title">Life is like a box of chocolate</a></p>
+                            <p class="item-date"><time datetime="2020-09-13T13:30:00.000Z" itemprop="datePublished">2020-09-13</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/">daily</a><span class="category-list-count">80</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/daily/algorithm/">algorithm</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/life/">life</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/retrospect/">retrospect</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/seminar/">seminar</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/daily/sentences/">sentences</a><span class="category-list-count">12</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">28</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/etc/aws/">aws</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/firebase/">firebase</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/intellij/">intellij</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/postman/">postman</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/vscode/">vscode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/webrtc/">webrtc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/etc/">ETC</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/basics/">basics</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">35</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/etc/">ETC</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jpa/">JPA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">Spring</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/java8/">java8</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/">js</a><span class="category-list-count">13</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/js/nest-js/">Nest.js</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/js/">js</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/js/ts/">ts</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/python/basic/">basic</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/">server</a><span class="category-list-count">24</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/server/graphql/">graphql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/postgresql/">postgresql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/rdb/">rdb</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/redis/">redis</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/server/tomcat/">tomcat</a><span class="category-list-count">2</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">21</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2018년/">2018년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2019년/">2019년</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aio/">AIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datadog/">DataDog</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isp/">ISP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/intellij/">IntelliJ</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jpa/">JPA</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solid/">SOLID</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sentry/">Sentry</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/snakeyaml/">SnakeYaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">Spring</a><span class="tag-list-count">21</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/">String</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vault/">Vault</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/adminbro/">adminbro</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/array/">array</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aws/">aws</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/">bash</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic/">basic</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bcrypt/">bcrypt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/book/">book</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/build/">build</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cascade/">cascade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud-functions/">cloud functions</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/constraint/">constraint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/">db</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/default-parameter/">default parameter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/di/">di</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/english/">english</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eslint/">eslint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/finalizer/">finalizer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firebase/">firebase</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fk/">fk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/">gRPC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/">gc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/good-enough-software/">good enough software</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/graphql/">graphql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/">hash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htop/">htop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">35</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javax/">javax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jdk/">jdk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstat/">jstat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lambda/">lambda</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lexical-scope/">lexical scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/">lock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrotate/">logrotate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucy/">lucy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mail/">mail</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mayu/">mayu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/">memory</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monorepo/">monorepo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-module/">multi module</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nestjs/">nestjs</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextjs/">nextjs</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagination/">pagination</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/password/">password</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pk/">pk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgresql/">postgresql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postman/">postman</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pragmatic-programmer/">pragmatic programmer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rdb/">rdb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/regex/">regex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/remote-config/">remote config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/retrospect/">retrospect</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/">scope</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/script/">script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seminar/">seminar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/">serverless</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/slice/">slice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/synchronized/">synchronized</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/troubleshooting/">troubleshooting</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/">typescript</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript-eslint/">typescript-eslint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/validation/">validation</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpc/">vpc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vscode/">vscode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webrtc/">webrtc</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/websocket/">websocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webstorm/">webstorm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/winston/">winston</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/">yaml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/실용주의-프로그래머/">실용주의 프로그래머</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/회고/">회고</a><span class="tag-list-count">29</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018년/" style="font-size: 10px;">2018년</a> <a href="/tags/2019년/" style="font-size: 10px;">2019년</a> <a href="/tags/aio/" style="font-size: 10px;">AIO</a> <a href="/tags/datadog/" style="font-size: 11.88px;">DataDog</a> <a href="/tags/hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/isp/" style="font-size: 10px;">ISP</a> <a href="/tags/intellij/" style="font-size: 10.63px;">IntelliJ</a> <a href="/tags/jpa/" style="font-size: 13.13px;">JPA</a> <a href="/tags/markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/redis/" style="font-size: 10px;">Redis</a> <a href="/tags/solid/" style="font-size: 10px;">SOLID</a> <a href="/tags/sentry/" style="font-size: 11.88px;">Sentry</a> <a href="/tags/snakeyaml/" style="font-size: 10px;">SnakeYaml</a> <a href="/tags/spring/" style="font-size: 18.75px;">Spring</a> <a href="/tags/string/" style="font-size: 10px;">String</a> <a href="/tags/vault/" style="font-size: 11.88px;">Vault</a> <a href="/tags/adminbro/" style="font-size: 10px;">adminbro</a> <a href="/tags/algorithm/" style="font-size: 16.25px;">algorithm</a> <a href="/tags/array/" style="font-size: 10px;">array</a> <a href="/tags/aws/" style="font-size: 10.63px;">aws</a> <a href="/tags/bash/" style="font-size: 11.88px;">bash</a> <a href="/tags/basic/" style="font-size: 11.25px;">basic</a> <a href="/tags/bcrypt/" style="font-size: 10px;">bcrypt</a> <a href="/tags/book/" style="font-size: 16.88px;">book</a> <a href="/tags/build/" style="font-size: 10px;">build</a> <a href="/tags/cascade/" style="font-size: 10px;">cascade</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cloud-functions/" style="font-size: 11.25px;">cloud functions</a> <a href="/tags/constraint/" style="font-size: 10px;">constraint</a> <a href="/tags/daily/" style="font-size: 10.63px;">daily</a> <a href="/tags/db/" style="font-size: 18.13px;">db</a> <a href="/tags/default-parameter/" style="font-size: 10px;">default parameter</a> <a href="/tags/di/" style="font-size: 10px;">di</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/english/" style="font-size: 15.63px;">english</a> <a href="/tags/eslint/" style="font-size: 10px;">eslint</a> <a href="/tags/finalizer/" style="font-size: 10px;">finalizer</a> <a href="/tags/firebase/" style="font-size: 11.25px;">firebase</a> <a href="/tags/fk/" style="font-size: 10px;">fk</a> <a href="/tags/grpc/" style="font-size: 10px;">gRPC</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/go/" style="font-size: 10.63px;">go</a> <a href="/tags/good-enough-software/" style="font-size: 10px;">good enough software</a> <a href="/tags/gradle/" style="font-size: 10px;">gradle</a> <a href="/tags/graphql/" style="font-size: 10px;">graphql</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/htop/" style="font-size: 10px;">htop</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 11.88px;">javascript</a> <a href="/tags/javax/" style="font-size: 10px;">javax</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jstat/" style="font-size: 10.63px;">jstat</a> <a href="/tags/lambda/" style="font-size: 10.63px;">lambda</a> <a href="/tags/lexical-scope/" style="font-size: 10px;">lexical scope</a> <a href="/tags/linux/" style="font-size: 13.13px;">linux</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/log/" style="font-size: 11.88px;">log</a> <a href="/tags/logrotate/" style="font-size: 10.63px;">logrotate</a> <a href="/tags/lucy/" style="font-size: 10px;">lucy</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mayu/" style="font-size: 10px;">mayu</a> <a href="/tags/memory/" style="font-size: 10px;">memory</a> <a href="/tags/monorepo/" style="font-size: 10px;">monorepo</a> <a href="/tags/multi-module/" style="font-size: 10px;">multi module</a> <a href="/tags/music/" style="font-size: 10px;">music</a> <a href="/tags/nestjs/" style="font-size: 13.75px;">nestjs</a> <a href="/tags/nextjs/" style="font-size: 11.25px;">nextjs</a> <a href="/tags/pagination/" style="font-size: 12.5px;">pagination</a> <a href="/tags/password/" style="font-size: 10px;">password</a> <a href="/tags/pk/" style="font-size: 10px;">pk</a> <a href="/tags/postgresql/" style="font-size: 10px;">postgresql</a> <a href="/tags/postman/" style="font-size: 15px;">postman</a> <a href="/tags/pragmatic-programmer/" style="font-size: 10px;">pragmatic programmer</a> <a href="/tags/python/" style="font-size: 11.25px;">python</a> <a href="/tags/rdb/" style="font-size: 10px;">rdb</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/remote-config/" style="font-size: 10px;">remote config</a> <a href="/tags/retrospect/" style="font-size: 10px;">retrospect</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/script/" style="font-size: 10px;">script</a> <a href="/tags/seminar/" style="font-size: 10px;">seminar</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/serverless/" style="font-size: 10px;">serverless</a> <a href="/tags/slice/" style="font-size: 10px;">slice</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/synchronized/" style="font-size: 10px;">synchronized</a> <a href="/tags/test/" style="font-size: 10.63px;">test</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/tomcat/" style="font-size: 10.63px;">tomcat</a> <a href="/tags/troubleshooting/" style="font-size: 10px;">troubleshooting</a> <a href="/tags/typescript/" style="font-size: 14.38px;">typescript</a> <a href="/tags/typescript-eslint/" style="font-size: 10px;">typescript-eslint</a> <a href="/tags/validation/" style="font-size: 10.63px;">validation</a> <a href="/tags/vpc/" style="font-size: 10px;">vpc</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/webrtc/" style="font-size: 12.5px;">webrtc</a> <a href="/tags/websocket/" style="font-size: 10px;">websocket</a> <a href="/tags/webstorm/" style="font-size: 10px;">webstorm</a> <a href="/tags/winston/" style="font-size: 10.63px;">winston</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/실용주의-프로그래머/" style="font-size: 10px;">실용주의 프로그래머</a> <a href="/tags/회고/" style="font-size: 19.38px;">회고</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 devson</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'https-ivvve-github-io-1';
+    
+    
+    var disqus_url = 'http://ivvve.github.io/2020/10/31/java/Spring/third-party-integration-3/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+
